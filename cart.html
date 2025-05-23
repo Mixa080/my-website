@@ -7,6 +7,8 @@
     <title>Koszyk - TSWOZ</title>
     <link rel="stylesheet" href="1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
@@ -162,7 +164,6 @@
         </div>
     </footer>
 
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
     <script>
         // Инициализация корзины
         const cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -255,47 +256,31 @@
 
         function initMap() {
             if (!myMap) {
-                const map = new google.maps.Map(document.getElementById('map'), {
-                    center: {
-                        lat: 52.2297,
-                        lng: 21.0122
-                    },
-                    zoom: 11
-                });
+                const map = L.map('map').setView([52.2297, 21.0122], 11);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '© OpenStreetMap'
+                }).addTo(map);
 
                 // Добавляем точки выдачи
                 const pickupPoints = [{
-                        coords: {
-                            lat: 52.2297,
-                            lng: 21.0122
-                        },
+                        coords: [52.2297, 21.0122],
                         address: 'ul. Rowerowa 1'
                     }, {
-                        coords: {
-                            lat: 52.2397,
-                            lng: 21.0222
-                        },
+                        coords: [52.2397, 21.0222],
                         address: 'ul. Sportowa 15'
                     },
                     // Добавьте больше точек
                 ];
 
                 pickupPoints.forEach(point => {
-                    const marker = new google.maps.Marker({
-                        position: point.coords,
-                        map: map,
-                        title: point.address
-                    });
-
-                    const infowindow = new google.maps.InfoWindow({
-                        content: point.address
-                    });
-
-                    marker.addListener('click', () => {
-                        infowindow.open(map, marker);
-                        document.getElementById('selected-point').textContent =
-                            'Wybrano punkt: ' + point.address;
-                    });
+                    const marker = L.marker(point.coords).addTo(map)
+                        .bindPopup(point.address)
+                        .on('click', () => {
+                            document.getElementById('selected-point').textContent =
+                                'Wybrano punkt: ' + point.address;
+                        });
                 });
             }
         }
@@ -312,6 +297,84 @@
 
         // Инициализация страницы
         updateCart();
+    </script>
+    <script>
+        let map;
+        let markers = [];
+        let selectedMarker = null;
+
+        function initMap() {
+            if (!map) {
+                // Инициализация карты (центр - Варшава)
+                map = L.map('map').setView([52.2297, 21.0122], 12);
+
+                // Добавление слоя OpenStreetMap
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                }).addTo(map);
+
+                // Пункты выдачи
+                const pickupPoints = [{
+                    position: [52.2297, 21.0122],
+                    title: 'Punkt odbioru 1',
+                    address: 'ul. Rowerowa 1, Warszawa'
+                }, {
+                    position: [52.2397, 21.0222],
+                    title: 'Punkt odbioru 2',
+                    address: 'ul. Sportowa 15, Warszawa'
+                }];
+
+                // Добавление маркеров
+                pickupPoints.forEach(point => {
+                    const marker = L.marker(point.position).addTo(map);
+
+                    const popupContent = `
+                        <div style="padding: 10px;">
+                            <h3 style="margin: 0 0 10px 0;">${point.title}</h3>
+                            <p style="margin: 0 0 10px 0;">${point.address}</p>
+                            <button onclick="selectPoint('${point.address}')" 
+                                    class="btn-select-point">
+                                Wybierz ten punkt
+                            </button>
+                        </div>
+                    `;
+
+                    marker.bindPopup(popupContent);
+                    markers.push(marker);
+                });
+            }
+
+            // Обновляем размер карты после отображения
+            setTimeout(() => {
+                map.invalidateSize();
+            }, 100);
+        }
+
+        function selectPoint(address) {
+            document.getElementById('selected-point').textContent = `Wybrany punkt: ${address}`;
+            document.getElementById('selected-point').style.display = 'block';
+        }
+
+        // Обработчик переключения способа доставки
+        document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const mapContainer = document.getElementById('map-container');
+                const addressForm = document.getElementById('address-form');
+                const deliveryCost = document.getElementById('delivery-cost');
+
+                if (this.value === 'pickup') {
+                    mapContainer.style.display = 'block';
+                    addressForm.style.display = 'none';
+                    deliveryCost.textContent = '0.00 zł';
+                    initMap();
+                } else {
+                    mapContainer.style.display = 'none';
+                    addressForm.style.display = 'block';
+                    deliveryCost.textContent = '15.99 zł';
+                }
+                updateTotalWithDelivery();
+            });
+        });
     </script>
 </body>
 
