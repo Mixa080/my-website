@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Koszyk - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <!-- Копируем шапку из index.html -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-links">
+                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
+                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
+            </div>
+            <div class="top-links">
+                <a href="#">Regulamin</a>
+                <a href="login.html">Moje konto</a>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>TSWOZ</h1>
+                <p>SKLEP ROWEROWY</p>
+            </div>
+            <div class="search-cart">
+                <div class="search-box">
+                    <input type="text" placeholder="Szukaj...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart">
+                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Strona główna</a></li>
+                <li><a href="bikes.html">Rowery</a></li>
+                <li><a href="#">Części</a></li>
+                <li><a href="#">Akcesoria</a></li>
+                <li><a href="#">Promocje</a></li>
+                <li><a href="login.html">Moje konto</a></li>
+                <li><a href="login.html">Rejestracja</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="cart-page">
+        <div class="container">
+            <h1>Twój koszyk</h1>
+            <div id="empty-cart" style="display: none;">
+                <p>Twój koszyk jest pusty</p>
+                <a href="index.html" class="btn">Wróć do zakupów</a>
+            </div>
+            <div id="cart-content" class="cart-content">
+                <div class="cart-items">
+                    <table id="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Produkt</th>
+                                <th>Cena</th>
+                                <th>Ilość</th>
+                                <th>Suma</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cart-items"></tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3">Razem:</td>
+                                <td id="cart-total">0.00 zł</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="cart-summary">
+                    <h2>Dostawa</h2>
+                    <form id="order-form" class="delivery-form">
+                        <div class="delivery-options">
+                            <div class="delivery-option">
+                                <input type="radio" id="courier" name="delivery" value="courier" checked>
+                                <label for="courier">
+                                    <span>Kurier DPD</span>
+                                    <span>15.99 zł</span>
+                                </label>
+                            </div>
+                            <div class="delivery-option">
+                                <input type="radio" id="pickup" name="delivery" value="pickup">
+                                <label for="pickup">
+                                    <span>Odbiór w punkcie</span>
+                                    <span>0 zł</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div id="address-form" class="delivery-details">
+                            <input type="text" placeholder="Imię i nazwisko" required>
+                            <input type="text" placeholder="Ulica i numer" required>
+                            <input type="text" placeholder="Kod pocztowy" required>
+                            <input type="text" placeholder="Miasto" required>
+                            <input type="tel" placeholder="Telefon" required>
+                        </div>
+
+                        <div id="map-container" class="delivery-details" style="display: none;">
+                            <div id="map" style="height: 300px;"></div>
+                            <p id="selected-point"></p>
+                        </div>
+
+                        <div class="order-summary">
+                            <div class="summary-row">
+                                <span>Wartość produktów:</span>
+                                <span id="products-total">0.00 zł</span>
+                            </div>
+                            <div class="summary-row">
+                                <span>Dostawa:</span>
+                                <span id="delivery-cost">15.99 zł</span>
+                            </div>
+                            <div class="summary-row total">
+                                <span>Do zapłaty:</span>
+                                <span id="total-with-delivery">0.00 zł</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Zamawiam i płacę</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Копируем footer из index.html -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>O nas</h3>
+                    <p>TSWOZ to sklep rowerowy z tradycjami...</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontakt</h3>
+                    <p>Tel: +48 123 456 789</p>
+                    <p>Email: kontakt@tswoz.pl</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY"></script>
+    <script>
+        // Инициализация корзины
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartItems = document.getElementById('cart-items');
+        const cartTotal = document.getElementById('cart-total');
+        const productsTotal = document.getElementById('products-total');
+        const totalWithDelivery = document.getElementById('total-with-delivery');
+        const emptyCart = document.getElementById('empty-cart');
+        const cartContent = document.getElementById('cart-content');
+
+        // Отображение товаров
+        function updateCart() {
+            if (cart.length === 0) {
+                emptyCart.style.display = 'block';
+                cartContent.style.display = 'none';
+                return;
+            }
+
+            cartItems.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const price = parseFloat(item.price.replace(' zł', '').replace(',', '.'));
+                total += price;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${item.name}</td>
+                    <td>${item.price}</td>
+                    <td>
+                        <div class="quantity-controls">
+                            <button onclick="updateQuantity(${index}, -1)">-</button>
+                            <span>1</span>
+                            <button onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>${price.toFixed(2)} zł</td>
+                    <td>
+                        <button onclick="removeItem(${index})" class="remove-btn">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                `;
+                cartItems.appendChild(tr);
+            });
+
+            // Обновление всех сумм
+            cartTotal.textContent = total.toFixed(2) + ' zł';
+            productsTotal.textContent = total.toFixed(2) + ' zł';
+            updateTotalWithDelivery();
+        }
+
+        // Обновление общей суммы с доставкой
+        function updateTotalWithDelivery() {
+            const productsSum = parseFloat(productsTotal.textContent);
+            const deliveryCost = parseFloat(document.getElementById('delivery-cost').textContent);
+            totalWithDelivery.textContent = (productsSum + deliveryCost).toFixed(2) + ' zł';
+        }
+
+        // Удаление товара
+        function removeItem(index) {
+            cart.splice(index, 1);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCart();
+        }
+
+        // Переключение способа доставки
+        const deliveryOptions = document.getElementsByName('delivery');
+        const addressForm = document.getElementById('address-form');
+        const mapContainer = document.getElementById('map-container');
+
+        deliveryOptions.forEach(option => {
+            option.addEventListener('change', function() {
+                if (this.value === 'courier') {
+                    addressForm.style.display = 'block';
+                    mapContainer.style.display = 'none';
+                    document.getElementById('delivery-cost').textContent = '15.99 zł';
+                } else {
+                    addressForm.style.display = 'none';
+                    mapContainer.style.display = 'block';
+                    document.getElementById('delivery-cost').textContent = '0.00 zł';
+                    initMap();
+                }
+                updateTotalWithDelivery();
+            });
+        });
+
+        // Инициализация карты
+        let myMap;
+
+        function initMap() {
+            if (!myMap) {
+                const map = new google.maps.Map(document.getElementById('map'), {
+                    center: {
+                        lat: 52.2297,
+                        lng: 21.0122
+                    },
+                    zoom: 11
+                });
+
+                // Добавляем точки выдачи
+                const pickupPoints = [{
+                        coords: {
+                            lat: 52.2297,
+                            lng: 21.0122
+                        },
+                        address: 'ul. Rowerowa 1'
+                    }, {
+                        coords: {
+                            lat: 52.2397,
+                            lng: 21.0222
+                        },
+                        address: 'ul. Sportowa 15'
+                    },
+                    // Добавьте больше точек
+                ];
+
+                pickupPoints.forEach(point => {
+                    const marker = new google.maps.Marker({
+                        position: point.coords,
+                        map: map,
+                        title: point.address
+                    });
+
+                    const infowindow = new google.maps.InfoWindow({
+                        content: point.address
+                    });
+
+                    marker.addListener('click', () => {
+                        infowindow.open(map, marker);
+                        document.getElementById('selected-point').textContent =
+                            'Wybrano punkt: ' + point.address;
+                    });
+                });
+            }
+        }
+
+        // Отправка формы
+        document.getElementById('order-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Здесь добавьте логику отправки заказа
+            alert('Zamówienie zostało przyjęte!');
+            cart.length = 0;
+            localStorage.setItem('cart', JSON.stringify(cart));
+            window.location.href = 'index.html';
+        });
+
+        // Инициализация страницы
+        updateCart();
+    </script>
+</body>
+
+</html>

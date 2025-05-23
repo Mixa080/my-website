@@ -26,8 +26,6 @@ ul {
     list-style: none;
 }
 
-
-
 .top-bar {
     background-color: #f5f5f5;
     padding: 10px 0;
@@ -51,8 +49,6 @@ ul {
 .top-links a i {
     margin-right: 5px;
 }
-
-
 
 header {
     padding: 20px 0;
@@ -116,8 +112,6 @@ header .container {
     margin-right: 5px;
 }
 
-
-
 nav {
     background-color: #e74c3c;
     padding: 15px 0;
@@ -171,12 +165,10 @@ nav ul li:hover .submenu {
     color: #e74c3c;
 }
 
-
-
 .slider {
     position: relative;
     width: 100%;
-    height: 500px; 
+    height: 500px;
     overflow: hidden;
     margin-bottom: 30px;
 }
@@ -471,4 +463,152 @@ footer {
     .slide-content p {
         font-size: 16px;
     }
+}
+
+.cart-page {
+    padding: 40px 0;
+    min-height: 60vh;
+}
+
+.cart-content {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+#cart-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#cart-table th,
+#cart-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.quantity-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.quantity-controls button {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background: #f8f8f8;
+    cursor: pointer;
+}
+
+.remove-btn {
+    background: none;
+    border: none;
+    color: #ff4444;
+    cursor: pointer;
+}
+
+.cart-summary {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.delivery-options {
+    margin: 20px 0;
+}
+
+.delivery-option {
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.delivery-option label {
+    display: flex;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.delivery-details input {
+    width: 100%;
+    padding: 10px;
+    margin: 5px 0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.order-summary {
+    margin: 20px 0;
+    padding: 20px 0;
+    border-top: 1px solid #ddd;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin: 10px 0;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.btn-primary:hover {
+    background: #0056b3;
+}
+
+#empty-cart {
+    text-align: center;
+    padding: 40px;
+}
+
+#empty-cart .btn {
+    display: inline-block;
+    margin-top: 20px;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+    margin: 15px 0;
+    border-radius: 4px;
+}
+
+.btn-select-point {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-select-point:hover {
+    background: #0056b3;
+}
+
+#selected-point {
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 4px;
 }

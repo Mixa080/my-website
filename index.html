@@ -35,7 +35,7 @@
                     <button><i class="fas fa-search"></i></button>
                 </div>
                 <div class="cart">
-                    <a href="#"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
                 </div>
             </div>
         </div>
@@ -82,15 +82,6 @@
             </div>
         </div>
     </section>
-    <script>
-        let current = 0;
-        const slides = document.querySelectorAll('.slide');
-        setInterval(() => {
-            slides[current].classList.remove('active');
-            current = (current + 1) % slides.length;
-            slides[current].classList.add('active');
-        }, 3000);
-    </script>
 
     <section class="categories">
         <div class="container">
@@ -207,6 +198,64 @@
             </div>
         </div>
     </footer>
+
+    <script src="https://api-maps.yandex.ru/2.1/?lang=pl_PL" type="text/javascript"></script>
+    <script>
+        // Логика слайдера
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        setInterval(() => {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+        }, 3000);
+
+        // Логика корзины
+        let cartCount = 0;
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const cartLink = document.querySelector('.cart a');
+        const addToCartButtons = document.querySelectorAll('.product-card .btn');
+
+        // При загрузке страницы обновляем счетчик
+        cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
+
+        // Добавление товара в корзину
+        addToCartButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const card = btn.closest('.product-card');
+                const name = card.querySelector('h3').innerText;
+                const price = card.querySelector('.current-price').innerText;
+                const image = card.querySelector('img').src;
+
+                cart.push({
+                    name,
+                    price,
+                    image,
+                    quantity: 1
+                });
+
+                localStorage.setItem('cart', JSON.stringify(cart));
+                cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
+
+                // Добавляем анимацию добавления в корзину
+                const notification = document.createElement('div');
+                notification.className = 'cart-notification';
+                notification.textContent = 'Dodano do koszyka';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            });
+        });
+
+        // Открытие корзины
+        cartLink.addEventListener('click', function(e) {
+            // Не отменяем событие по умолчанию, чтобы происходил переход по ссылке
+            window.location.href = 'cart.html';
+        });
+    </script>
 </body>
 
 </html>
