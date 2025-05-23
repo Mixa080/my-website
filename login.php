@@ -29,7 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $_SESSION['user_email'] = $user['email'];
         
         // Przekierowanie do strony głównej
-        header("Location: 1.html");
+        header("Location: index.html");
         exit();
     } else {
         // Błąd logowania
