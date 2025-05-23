@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logowanie i rejestracja</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .login-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .login-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group input:focus {
+            border-color: #e74c3c;
+            outline: none;
+        }
+        
+        .btn-login, .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        
+        .btn-login:hover, .btn-register:hover {
+            background: #c0392b;
+        }
+        
+        .register-link, .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .register-link a, .login-link a {
+            color: #e74c3c;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        
+        .success {
+            color: green;
+            text-align: center;
+        }
+        
+        .error {
+            color: red;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-links">
+                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
+                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
+            </div>
+            <div class="top-links">
+                <a href="#">Regulamin</a>
+                <a href="#">Moje konto</a>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>TSWOZ</h1>
+                <p>SKLEP ROWEROWY</p>
+            </div>
+            <div class="search-cart">
+                <div class="search-box">
+                    <input type="text" placeholder="Szukaj...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart">
+                    <a href="#"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="1.html">Strona główna</a></li>
+                <li><a href="#">Rowery</a>
+                    <ul class="submenu">
+                        <li><a href="#">Górskie</a></li>
+                        <li><a href="#">Miejskie</a></li>
+                        <li><a href="#">Szosowe</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Części</a></li>
+                <li><a href="#">Akcesoria</a></li>
+                <li><a href="#">Promocje</a></li>
+                <li><a href="login.html">Moje konto</a></li>
+                <li><a href="register.html">Rejestracja</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="login-container">
+        <div id="login-box">
+            <h2>Logowanie</h2>
+            <div class="form-group">
+                <label for="loginUser">Nazwa użytkownika</label>
+                <input type="text" id="loginUser" placeholder="Wpisz nazwę użytkownika">
+            </div>
+            <div class="form-group">
+                <label for="loginPass">Hasło</label>
+                <input type="password" id="loginPass" placeholder="Wpisz hasło">
+            </div>
+            <button class="btn-login" onclick="login()">Zaloguj się</button>
+            <div id="loginMsg"></div>
+            <div class="register-link">
+                Nie masz konta? <a href="register.html">Zarejestruj się</a>
+            </div>
+        </div>
+        <div id="register-box" style="display:none;">
+            <h2>Rejestracja</h2>
+            <div class="form-group">
+                <label for="regUser">Nazwa użytkownika</label>
+                <input type="text" id="regUser" placeholder="Wpisz nazwę użytkownika">
+            </div>
+            <div class="form-group">
+                <label for="regPass">Hasło</label>
+                <input type="password" id="regPass" placeholder="Wpisz hasło">
+            </div>
+            <button class="btn-register" onclick="register()">Zarejestruj się</button>
+            <div id="regMsg"></div>
+            <div class="login-link">
+                Masz już konto? <a onclick="showLogin()">Zaloguj się</a>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Informacje</h3>
+                    <ul>
+                        <li><a href="#">O sklepie</a></li>
+                        <li><a href="#">Regulamin</a></li>
+                        <li><a href="#">Polityka prywatności</a></li>
+                        <li><a href="#">Zwroty i reklamacje</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Moje konto</h3>
+                    <ul>
+                        <li><a href="#">Zaloguj się</a></li>
+                        <li><a href="register.html">Zarejestruj się</a></li>
+                        <li><a href="#">Moje zamówienia</a></li>
+                        <li><a href="#">Lista życzeń</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontakt</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> ul. Rowerowa 1, 00-001 Warszawa</li>
+                        <li><i class="fas fa-phone"></i> +48 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> kontakt@tswoz.pl</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Zapisz się do newslettera aby otrzymywać informacje o promocjach</p>
+                    <form>
+                        <input type="email" placeholder="Twój email">
+                        <button type="submit" class="btn">Zapisz się</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        function showRegister() {
+            document.getElementById('login-box').style.display = 'none';
+            document.getElementById('register-box').style.display = 'block';
+            document.getElementById('loginMsg').innerHTML = '';
+        }
+        function showLogin() {
+            document.getElementById('register-box').style.display = 'none';
+            document.getElementById('login-box').style.display = 'block';
+            document.getElementById('regMsg').innerHTML = '';
+        }
+        function register() {
+            const user = document.getElementById('regUser').value.trim();
+            const pass = document.getElementById('regPass').value;
+            if (!user || !pass) {
+                document.getElementById('regMsg').innerHTML = '<span class="error">Wypełnij wszystkie pola!</span>';
+                return;
+            }
+            if (localStorage.getItem('user_' + user)) {
+                document.getElementById('regMsg').innerHTML = '<span class="error">Użytkownik już istnieje!</span>';
+                return;
+            }
+            localStorage.setItem('user_' + user, pass);
+            document.getElementById('regMsg').innerHTML = '<span class="success">Rejestracja udana! Możesz się zalogować.</span>';
+            setTimeout(showLogin, 1200);
+        }
+        function login() {
+            const user = document.getElementById('loginUser').value.trim();
+            const pass = document.getElementById('loginPass').value;
+            const stored = localStorage.getItem('user_' + user);
+            if (stored && stored === pass) {
+                document.getElementById('loginMsg').innerHTML = '<span class="success">Zalogowano pomyślnie!</span>';
+            } else {
+                document.getElementById('loginMsg').innerHTML = '<span class="error">Błędny login lub hasło!</span>';
+            }
+        }
+    </script>
+</body>
+
+</html>

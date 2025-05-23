@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejestracja - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .registration-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .registration-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .form-group input:focus {
+            border-color: #e74c3c;
+            outline: none;
+        }
+        
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn-register:hover {
+            background: #c0392b;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .login-link a {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Górny pasek -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-links">
+                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
+                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
+            </div>
+            <div class="top-links">
+                <a href="#">Regulamin</a>
+                <a href="#">Moje konto</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nagłówek -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>TSWOZ</h1>
+                <p>SKLEP ROWEROWY</p>
+            </div>
+            <div class="search-cart">
+                <div class="search-box">
+                    <input type="text" placeholder="Szukaj...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart">
+                    <a href="#"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menu nawigacyjne -->
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="1.html">Strona główna</a></li>
+                <li><a href="#">Rowery</a>
+                    <ul class="submenu">
+                        <li><a href="#">Górskie</a></li>
+                        <li><a href="#">Miejskie</a></li>
+                        <li><a href="#">Szosowe</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">Części</a></li>
+                <li><a href="#">Akcesoria</a></li>
+                <li><a href="#">Promocje</a></li>
+                <li><a href="login.html">Moje konto</a></li>
+                <li><a href="register.html">Rejestracja</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Formularz rejestracji -->
+    <div class="container">
+        <div class="registration-container">
+            <h2>Rejestracja</h2>
+            <form id="registrationForm" action="register.php" method="POST">
+                <div class="form-group">
+                    <label for="name">Imię</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Nazwisko</label>
+                    <input type="text" id="surname" name="surname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Hasło</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Potwierdź hasło</label>
+                    <input type="password" id="confirm_password" name="confirm_password" required>
+                </div>
+                <button type="submit" class="btn-register">Zarejestruj się</button>
+            </form>
+            <div class="login-link">
+                Masz już konto? <a href="login.html">Zaloguj się</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stopka -->
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Informacje</h3>
+                    <ul>
+                        <li><a href="#">O sklepie</a></li>
+                        <li><a href="#">Regulamin</a></li>
+                        <li><a href="#">Polityka prywatności</a></li>
+                        <li><a href="#">Zwroty i reklamacje</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Moje konto</h3>
+                    <ul>
+                        <li><a href="#">Zaloguj się</a></li>
+                        <li><a href="register.html">Zarejestruj się</a></li>
+                        <li><a href="#">Moje zamówienia</a></li>
+                        <li><a href="#">Lista życzeń</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontakt</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> ul. Rowerowa 1, 00-001 Warszawa</li>
+                        <li><i class="fas fa-phone"></i> +48 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> kontakt@tswoz.pl</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Zapisz się do newslettera aby otrzymywać informacje o promocjach</p>
+                    <form>
+                        <input type="email" placeholder="Twój email">
+                        <button type="submit" class="btn">Zapisz się</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm_password').value;
+
+            if (password !== confirmPassword) {
+                alert('Hasła nie są identyczne!');
+                return;
+            }
+
+            // Tutaj można dodać dodatkową walidację
+
+            // Jeśli wszystko jest w porządku, wysyłamy formularz
+            this.submit();
+        });
+    </script>
+</body>
+
+</html>

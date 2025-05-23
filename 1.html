@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSWOZ - Sklep Rowerowy</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-links">
+                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
+                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
+            </div>
+            <div class="top-links">
+                <a href="#">Regulamin</a>
+                <a href="login.html">Moje konto</a>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>TSWOZ</h1>
+                <p>SKLEP ROWEROWY</p>
+            </div>
+            <div class="search-cart">
+                <div class="search-box">
+                    <input type="text" placeholder="Szukaj...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart">
+                    <a href="#"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Strona główna</a></li>
+                <li><a href="bikes.html">Rowery</a></li>
+                <li><a href="#">Części</a></li>
+                <li><a href="#">Akcesoria</a></li>
+                <li><a href="#">Promocje</a></li>
+                <li><a href="login.html">Moje konto</a></li>
+                <li><a href="login.html">Rejestracja</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <section class="slider">
+        <div class="slide active">
+            <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Promocja rowerów">
+            <div class="slide-content">
+                <h2>Nowa kolekcja 2025</h2>
+                <p>Odkryj nasze najlepsze modele</p>
+                <a href="#" class="btn">Zobacz więcej</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="Trek_Slash_2021.jpg" alt="Rower 2">
+            <div class="slide-content">
+                <h2>Wyprzedaż sezonowa</h2>
+                <p>Najlepsze ceny na rowery górskie</p>
+                <a href="#" class="btn">Sprawdź ofertę</a>
+            </div>
+        </div>
+        <div class="slide">
+            <img src="0306cad1b2166940bf862516dd73ef52e362d3fe-6000x4000.jpg" alt="Rower 3">
+            <div class="slide-content">
+                <h2>Akcesoria rowerowe</h2>
+                <p>Wszystko, czego potrzebujesz</p>
+                <a href="#" class="btn">Zobacz akcesoria</a>
+            </div>
+        </div>
+    </section>
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        setInterval(() => {
+            slides[current].classList.remove('active');
+            current = (current + 1) % slides.length;
+            slides[current].classList.add('active');
+        }, 3000);
+    </script>
+
+    <section class="categories">
+        <div class="container">
+            <h2>Nasze kategorie</h2>
+            <div class="category-grid">
+                <a href="#" class="category-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rowery górskie">
+                    <h3>Rowery górskie</h3>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rowery miejskie">
+                    <h3>Rowery miejskie</h3>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rowery szosowe">
+                    <h3>Rowery szosowe</h3>
+                </a>
+                <a href="#" class="category-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Akcesoria">
+                    <h3>Akcesoria</h3>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="container">
+            <h2>Polecane produkty</h2>
+            <div class="product-grid">
+                <div class="product-card">
+                    <div class="product-badge">Promocja</div>
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rower górski">
+                    <h3>Rower górski TSWOZ Pro 29"</h3>
+                    <div class="price">
+                        <span class="old-price">4 999 zł</span>
+                        <span class="current-price">3 799 zł</span>
+                    </div>
+                    <a href="#" class="btn">Dodaj do koszyka</a>
+                </div>
+                <div class="product-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rower miejski">
+                    <h3>Rower miejski TSWOZ City</h3>
+                    <div class="price">
+                        <span class="current-price">2 499 zł</span>
+                    </div>
+                    <a href="#" class="btn">Dodaj do koszyka</a>
+                </div>
+                <div class="product-card">
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Rower szosowy">
+                    <h3>Rower szosowy TSWOZ Speed</h3>
+                    <div class="price">
+                        <span class="current-price">5 299 zł</span>
+                    </div>
+                    <a href="#" class="btn">Dodaj do koszyka</a>
+                </div>
+                <div class="product-card">
+                    <div class="product-badge">Nowość</div>
+                    <img src="sco-bike-addict-rc-team_2211488.jpg" alt="Kask rowerowy">
+                    <h3>Kask rowerowy TSWOZ Air</h3>
+                    <div class="price">
+                        <span class="current-price">199 zł</span>
+                    </div>
+                    <a href="#" class="btn">Dodaj do koszyka</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-columns">
+                <div class="footer-column">
+                    <h3>Informacje</h3>
+                    <ul>
+                        <li><a href="#">O sklepie</a></li>
+                        <li><a href="#">Regulamin</a></li>
+                        <li><a href="#">Polityka prywatności</a></li>
+                        <li><a href="#">Zwroty i reklamacje</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Moje konto</h3>
+                    <ul>
+                        <li><a href="#">Zaloguj się</a></li>
+                        <li><a href="#">Zarejestruj się</a></li>
+                        <li><a href="#">Moje zamówienia</a></li>
+                        <li><a href="#">Lista życzeń</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Kontakt</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> ul. Rowerowa 1, 00-001 Warszawa</li>
+                        <li><i class="fas fa-phone"></i> +48 123 456 789</li>
+                        <li><i class="fas fa-envelope"></i> kontakt@tswoz.pl</li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Newsletter</h3>
+                    <p>Zapisz się do newslettera aby otrzymywać informacje o promocjach</p>
+                    <form>
+                        <input type="email" placeholder="Twój email">
+                        <button type="submit" class="btn">Zapisz się</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
+                <div class="payment-methods">
+                    <i class="fab fa-cc-visa"></i>
+                    <i class="fab fa-cc-mastercard"></i>
+                    <i class="fab fa-cc-paypal"></i>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+
+</html>

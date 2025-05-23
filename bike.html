@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <title>Szczegóły roweru - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="bikes.js"></script>
+    <style>
+        .product-page {
+            max-width: 1100px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+            display: flex;
+            gap: 40px;
+            padding: 40px 30px 30px 30px;
+        }
+        .product-gallery {
+            flex: 1 1 400px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .main-img {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+            transition: 0.2s;
+        }
+        .thumbnails {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .thumbnail {
+            width: 60px;
+            height: 45px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border 0.2s;
+        }
+        .thumbnail.active {
+            border: 2px solid #e74c3c;
+        }
+        .product-info {
+            flex: 1 1 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        .product-info h1 {
+            font-size: 2.1rem;
+            margin-bottom: 18px;
+            color: #e74c3c;
+        }
+        .product-price {
+            font-size: 1.7rem;
+            color: #222;
+            margin-bottom: 10px;
+        }
+        .old-price {
+            color: #888;
+            text-decoration: line-through;
+            font-size: 1.1rem;
+            margin-right: 10px;
+        }
+        .desc {
+            margin: 18px 0 28px 0;
+            color: #444;
+            font-size: 1.1rem;
+        }
+        .btn-buy {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 18px;
+        }
+        .btn-buy:hover {
+            background: #c0392b;
+        }
+        .product-details-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 18px;
+        }
+        .product-details-table th, .product-details-table td {
+            border: 1px solid #eee;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .product-details-table th {
+            background: #f5f5f5;
+            color: #666;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: #e74c3c;
+            text-decoration: underline;
+        }
+        @media (max-width: 900px) {
+            .product-page { flex-direction: column; padding: 20px 5px; }
+            .product-gallery img { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Górny pasek -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-links">
+                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
+                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
+            </div>
+            <div class="top-links">
+                <a href="#">Regulamin</a>
+                <a href="login.html">Moje konto</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header i menu -->
+    <header>
+        <div class="container">
+            <div class="logo">
+                <h1>TSWOZ</h1>
+                <p>SKLEP ROWEROWY</p>
+            </div>
+            <div class="search-cart">
+                <div class="search-box">
+                    <input type="text" placeholder="Szukaj...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="cart">
+                    <a href="#"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                </div>
+            </div>
+        </div>
+    </header>
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Strona główna</a></li>
+                <li><a href="bikes.html">Rowery</a></li>
+                <li><a href="#">Części</a></li>
+                <li><a href="#">Akcesoria</a></li>
+                <li><a href="#">Promocje</a></li>
+                <li><a href="login.html">Moje konto</a></li>
+                <li><a href="login.html">Rejestracja</a></li>
+                <li><a href="#">Kontakt</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Szczegóły produktu -->
+    <div class="container">
+        <div class="product-page" id="product-page" style="display:none;">
+            <div class="product-gallery">
+                <div class="thumbnails" id="thumbnails"></div>
+                <img id="main-img" class="main-img" src="" alt="rower">
+            </div>
+            <div class="product-info">
+                <h1 id="bike-name"></h1>
+                <div class="product-price" id="bike-price"></div>
+                <div class="desc" id="bike-desc"></div>
+                <button class="btn-buy"><i class="fas fa-shopping-cart"></i> Dodaj do koszyka</button>
+                <a href="bikes.html" class="back-link">&larr; Powrót do katalogu</a>
+            </div>
+        </div>
+        <div id="tech-details"></div>
+    </div>
+
+    <!-- Stopka -->
+    <footer style="background:#f5f5f5; margin-top:40px; padding:25px 0 10px 0;">
+        <div class="container" style="text-align:center; color:#888;">
+            &copy; 2025 TSWOZ Sklep Rowerowy &middot; kontakt@tswoz.pl &middot; +48 123 456 789
+        </div>
+    </footer>
+
+    <script>
+        // Przykładowe dane techniczne (możesz rozbudować w bikes.js)
+        const extraDetails = {
+            1: [
+                ["Rama", "Aluminium 29\""],
+                ["Widelec", "Amortyzowany Suntour"],
+                ["Hamulce", "Tarcze hydrauliczne Shimano"],
+                ["Przerzutki", "Shimano Deore 2x10"],
+                ["Waga", "13.5 kg"]
+            ],
+            2: [
+                ["Rama", "Stal miejska"],
+                ["Widelec", "Sztywny"],
+                ["Hamulce", "V-brake"],
+                ["Przerzutki", "Shimano Nexus 7"],
+                ["Waga", "15.2 kg"]
+            ],
+            3: [
+                ["Rama", "Carbon szosowy"],
+                ["Widelec", "Carbon"],
+                ["Hamulce", "Tarcze hydrauliczne Shimano"],
+                ["Przerzutki", "Shimano 105 2x11"],
+                ["Waga", "8.9 kg"]
+            ]
+        };
+
+        function getParam(name) {
+            const url = new URL(window.location.href);
+            return url.searchParams.get(name);
+        }
+        const id = parseInt(getParam('id'));
+        const bike = bikes.find(b => b.id === id);
+
+        if (bike) {
+            // Galeria zdjęć
+            const gallery = bike.gallery && bike.gallery.length ? bike.gallery : [bike.img];
+            let currentImg = 0;
+
+            // Ustaw dane główne
+            document.getElementById('bike-name').textContent = bike.name;
+            document.getElementById('bike-desc').textContent = bike.desc;
+            document.getElementById('main-img').src = gallery[0];
+            document.getElementById('main-img').alt = bike.name;
+
+            document.getElementById('bike-price').innerHTML =
+                (bike.oldPrice ? `<span class="old-price">${bike.oldPrice} zł</span>` : '') +
+                `<span class="current-price">${bike.price} zł</span>`;
+
+            // Miniaturki
+            const thumbnails = document.getElementById('thumbnails');
+            gallery.forEach((src, idx) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'thumbnail' + (idx === 0 ? ' active' : '');
+                img.onclick = () => {
+                    document.getElementById('main-img').src = src;
+                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+                    img.classList.add('active');
+                };
+                thumbnails.appendChild(img);
+            });
+
+            // Pokaż stronę produktu
+            document.getElementById('product-page').style.display = '';
+
+            // Dane techniczne pod całością
+            let detailsTable = '';
+            if (extraDetails[id]) {
+                detailsTable = `<h3 style="margin-top:40px;">Dane techniczne</h3>
+                <table class="product-details-table">
+                    ${extraDetails[id].map(row => `<tr><th>${row[0]}</th><td>${row[1]}</td></tr>`).join('')}
+                </table>`;
+            }
+            document.getElementById('tech-details').innerHTML = detailsTable;
+        } else {
+            document.getElementById('product-page').innerHTML = "<p>Nie znaleziono roweru.</p>";
+        }
+    </script>
+</body>
+</html>
