@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Płatność - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="components/loader.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        .payment-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+        }
+        
+        .payment-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .payment-header h1 {
+            color: #e74c3c;
+            margin-bottom: 10px;
+        }
+        
+        .order-summary {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .order-summary h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .summary-row.total {
+            font-size: 1.2em;
+            color: #333;
+            font-weight: 600;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .payment-methods {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .payment-method {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .payment-method:hover {
+            border-color: #e74c3c;
+        }
+        
+        .payment-method.active {
+            border-color: #e74c3c;
+            background: #fff5f5;
+        }
+        
+        .payment-method-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .payment-method-header i {
+            margin-right: 15px;
+            color: #e74c3c;
+            font-size: 1.5em;
+        }
+        
+        .payment-method-header h3 {
+            margin: 0;
+            color: #333;
+        }
+        
+        .payment-form {
+            display: none;
+            margin-top: 20px;
+        }
+        
+        .payment-form.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        .form-group input:focus {
+            border-color: #e74c3c;
+            outline: none;
+        }
+        
+        #card-element {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+        
+        #card-errors {
+            color: #dc3545;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+        
+        .blik-container {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f8f8;
+            border-radius: 8px;
+        }
+        
+        .blik-code {
+            font-size: 2.5em;
+            font-weight: bold;
+            letter-spacing: 5px;
+            margin: 10px 0;
+            color: #333;
+        }
+        
+        .blik-timer {
+            font-size: 1.2em;
+            color: #e74c3c;
+            margin: 10px 0;
+        }
+        
+        .blik-qr {
+            width: 200px;
+            height: 200px;
+            margin: 20px auto;
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        
+        .blik-status {
+            text-align: center;
+            margin-top: 10px;
+            color: #666;
+        }
+        
+        .bank-details {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        .bank-details p {
+            margin: 5px 0;
+            color: #666;
+        }
+        
+        .btn-pay {
+            width: 100%;
+            padding: 15px 30px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+            /* Adjusted margin */
+        }
+        
+        .btn-pay:hover {
+            background: #c0392b;
+        }
+        
+        .btn-pay:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .payment-status {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .payment-status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .payment-status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <div class="payment-container">
+            <div class="payment-header">
+                <h1>Płatność</h1>
+                <p>Wybierz metodę płatności</p>
+            </div>
+
+            <div class="order-summary">
+                <h3>Podsumowanie zamówienia</h3>
+                <div class="summary-row">
+                    <span>Produkty</span>
+                    <span id="products-total">0 zł</span>
+                </div>
+                <div class="summary-row">
+                    <span>Dostawa</span>
+                    <span>Darmowa</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Razem</span>
+                    <span id="total-amount">0 zł</span>
+                </div>
+            </div>
+
+            <div class="payment-methods">
+                <div class="payment-method" data-method="card">
+                    <div class="payment-method-header">
+                        <i class="fas fa-credit-card"></i>
+                        <h3>Karta płatnicza</h3>
+                    </div>
+                    <div class="payment-form" id="card-form">
+                        <form id="stripe-payment-form">
+                            <div id="card-element"></div>
+                            <div id="card-errors" role="alert"></div>
+                            <button type="submit" class="btn-pay" id="submit-stripe-payment">Zapłać kartą</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="payment-method" data-method="blik">
+                    <div class="payment-method-header">
+                        <i class="fas fa-mobile-alt"></i>
+                        <h3>BLIK</h3>
+                    </div>
+                    <div class="payment-form" id="blik-form">
+                        <p>Otwórz aplikację swojego banku i zeskanuj kod QR lub wprowadź poniższy kod:</p>
+                        <div class="blik-container">
+                            <div class="blik-code" id="blik-code">123456</div>
+                            <div class="blik-timer" id="blik-timer">2:00</div>
+                            <div class="blik-qr" id="blik-qr"></div>
+                        </div>
+                        <p class="blik-status" id="blik-status">Oczekiwanie na płatność...</p>
+                        <button type="button" class="btn-pay" id="confirm-blik-payment">Potwierdź płatność BLIK</button>
+                    </div>
+                </div>
+
+                <div class="payment-method" data-method="transfer">
+                    <div class="payment-method-header">
+                        <i class="fas fa-university"></i>
+                        <h3>Przelew bankowy</h3>
+                    </div>
+                    <div class="payment-form" id="transfer-form">
+                        <div class="bank-details">
+                            <p><strong>Odbiorca:</strong> TSWOZ Sp. z o.o.</p>
+                            <p><strong>Numer konta:</strong> 12 3456 7890 1234 5678 9012 3456</p>
+                            <p><strong>Tytuł przelewu:</strong> Zamówienie #<span id="order-number-transfer"></span></p>
+                            <p><strong>Kwota:</strong> <span id="transfer-amount">0 zł</span></p>
+                        </div>
+                        <p>Zamówienie zostanie zrealizowane po zaksięgowaniu płatności.</p>
+                        <button type="button" class="btn-pay" id="confirm-transfer-payment">Potwierdź przelew</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="payment-status" class="payment-status" style="display: none;"></div>
+
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Инициализация Stripe (публичный ключ)
+        const stripe = Stripe('pk_test_51RSLdWR0c0Vk2KnFp2LQZbSHeX6gizhK16lDWFAvmqNJwPmw5W7jLfQGEvEpLEAhBgu40iDQBSWW8C8QWuUhlqBS00jYU2mCMa');
+        const elements = stripe.elements();
+
+        // Получаем параметры из URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+        const totalAmount = urlParams.get('total');
+        const clientSecret = urlParams.get('clientSecret'); // Только для оплаты картой
+
+        // Отображаем информацию о заказе
+        document.getElementById('products-total').textContent = totalAmount + ' zł';
+        document.getElementById('total-amount').textContent = totalAmount + ' zł';
+        document.getElementById('transfer-amount').textContent = totalAmount + ' zł';
+        document.getElementById('order-number-transfer').textContent = orderId;
+
+        // Создаем элемент для ввода данных карты Stripe
+        const card = elements.create('card', {
+            style: {
+                base: {
+                    fontSize: '16px',
+                    color: '#32325d',
+                    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                    fontSmoothing: 'antialiased',
+                    '::placeholder': {
+                        color: '#aab7c4'
+                    }
+                },
+                invalid: {
+                    color: '#dc3545',
+                    iconColor: '#dc3545'
+                }
+            }
+        });
+
+        // Добавляем элемент на страницу (монтируем в контейнер)
+        // card.mount('#card-element'); // Монтируем только при выборе метода оплаты
+
+        // Обработка ошибок ввода карты
+        card.addEventListener('change', function(event) {
+            const displayError = document.getElementById('card-errors');
+            if (event.error) {
+                displayError.textContent = event.error.message;
+            } else {
+                displayError.textContent = '';
+            }
+        });
+
+        // Генерация случайного кода BLIK (для симуляции)
+        function generateBlikCode() {
+            return Math.floor(100000 + Math.random() * 900000).toString();
+        }
+
+        // Генерация QR-кода для BLIK
+        function generateBlikQR(code) {
+            if (typeof QRCode === 'undefined') {
+                console.error('QRCode library not loaded');
+                return;
+            }
+            const qrContainer = document.getElementById('blik-qr');
+            if (!qrContainer) {
+                console.error('BLIK QR container not found');
+                return;
+            }
+            qrContainer.innerHTML = ''; // Очищаем контейнер
+
+            // Создаем QR-код с помощью qrcode.js
+            new QRCode(qrContainer, {
+                text: `blik://${code}`,
+                width: 180,
+                height: 180,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        // Таймер для BLIK
+        let blikTimerInterval;
+
+        function startBlikTimer() {
+            let timeLeft = 120; // 2 минуты в секундах
+            const timerElement = document.getElementById('blik-timer');
+            const statusElement = document.getElementById('blik-status');
+
+            if (!timerElement || !statusElement) {
+                console.error('BLIK timer or status element not found');
+                return;
+            }
+
+            clearInterval(blikTimerInterval); // Очищаем предыдущий таймер
+
+            blikTimerInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timerElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeLeft <= 0) {
+                    clearInterval(blikTimerInterval);
+                    statusElement.textContent = 'Kod BLIK wygasł. Wygeneruj nowy.';
+                    statusElement.style.color = '#dc3545';
+                    document.getElementById('confirm-blik-payment').disabled = true; // Отключаем кнопку
+                } else {
+                    timeLeft--;
+                }
+            }, 1000);
+        }
+
+        // Обновление кода BLIK и таймера
+        function updateBlikSection() {
+            const blikCodeElement = document.getElementById('blik-code');
+            const statusElement = document.getElementById('blik-status');
+            const confirmButton = document.getElementById('confirm-blik-payment');
+
+            if (!blikCodeElement || !statusElement || !confirmButton) {
+                console.error('BLIK elements not found for update');
+                return;
+            }
+            const newCode = generateBlikCode();
+            blikCodeElement.textContent = newCode;
+            generateBlikQR(newCode);
+            startBlikTimer();
+            statusElement.textContent = 'Oczekiwanie na płatność...';
+            statusElement.style.color = '#666';
+            confirmButton.disabled = false; // Включаем кнопку
+        }
+
+        // Имитация проверки статуса BLIK
+        document.getElementById('confirm-blik-payment').addEventListener('click', () => {
+            const statusElement = document.getElementById('blik-status');
+            const confirmButton = document.getElementById('confirm-blik-payment');
+
+            if (!statusElement || !confirmButton) {
+                console.error('BLIK status or confirm button not found');
+                return;
+            }
+            statusElement.textContent = 'Płatność potwierdzona!';
+            statusElement.style.color = '#2ecc71';
+            confirmButton.disabled = true; // Отключаем кнопку после подтверждения
+            clearInterval(blikTimerInterval); // Останавливаем таймер
+
+            // Обновляем статус заказа в localStorage
+            updateOrderStatusInLocalStorage('completed');
+
+            // Перенаправляем на страницу подтверждения
+            setTimeout(() => {
+                window.location.href = `order-confirmation.html?orderId=${orderId}`;
+            }, 2000);
+        });
+
+        // Имитация подтверждения перевода (для симуляции)
+        document.getElementById('confirm-transfer-payment').addEventListener('click', () => {
+            // В реальном приложении здесь не было бы кнопки подтверждения
+            // Статус заказа обновлялся бы после фактического получения платежа банком
+            alert('Potwierdzenie przelewu zarejestrowane. Status zamówienia zostanie zaktualizowany po zaksięgowaniu płatności.');
+
+            // Обновляем статус заказа в localStorage (для симуляции)
+            updateOrderStatusInLocalStorage('awaiting_transfer');
+
+            // Перенаправляем на страницу подтверждения
+            setTimeout(() => {
+                window.location.href = `order-confirmation.html?orderId=${orderId}`;
+            }, 2000);
+        });
+
+        // Функция обновления статуса заказа в localStorage
+        function updateOrderStatusInLocalStorage(newStatus) {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const orderIndex = orders.findIndex(order => order.id === orderId);
+            if (orderIndex !== -1) {
+                orders[orderIndex].payment.status = newStatus;
+                localStorage.setItem('orders', JSON.stringify(orders));
+            }
+        }
+
+        // Обработка выбора метода оплаты
+        const paymentMethods = document.querySelectorAll('.payment-method');
+        paymentMethods.forEach(method => {
+            method.addEventListener('click', () => {
+                paymentMethods.forEach(m => m.classList.remove('active'));
+                method.classList.add('active');
+
+                document.querySelectorAll('.payment-form').forEach(form => {
+                    form.classList.remove('active');
+                });
+
+                const methodType = method.dataset.method;
+                const form = document.getElementById(`${methodType}-form`);
+
+                if (form) {
+                    form.classList.add('active');
+
+                    // Специальная логика для Stripe Elements
+                    if (methodType === 'card' && !card.element) {
+                        // Монтируем элемент карты только при выборе метода
+                        card.mount('#card-element');
+                    } else if (methodType !== 'card' && card.element) {
+                        // Размонтируем элемент карты при выборе другого метода
+                        card.unmount();
+                    }
+
+                    if (methodType === 'blik') {
+                        updateBlikSection();
+                    } else {
+                        clearInterval(blikTimerInterval); // Останавливаем таймер BLIK при выборе другого метода
+                    }
+                } else {
+                    console.error(`Payment form not found for method: ${methodType}`);
+                }
+
+                // Скрываем/показываем статус оплаты
+                document.getElementById('payment-status').style.display = 'none';
+            });
+        });
+
+        // Обработка отправки формы Stripe (для оплаты картой)
+        const stripePaymentForm = document.getElementById('stripe-payment-form');
+        if (stripePaymentForm) {
+            stripePaymentForm.addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const submitButton = document.getElementById('submit-stripe-payment');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Przetwarzanie...';
+
+                try {
+                    const {
+                        paymentIntent,
+                        error
+                    } = await stripe.confirmCardPayment(clientSecret, {
+                        payment_method: {
+                            card: card,
+                            billing_details: {
+                                name: 'Klient TSWOZ' // Можно добавить поля для ввода имени
+                            }
+                        }
+                    });
+
+                    const statusElement = document.getElementById('payment-status');
+                    const errorElement = document.getElementById('card-errors');
+
+                    if (error) {
+                        // Обработка ошибки
+                        errorElement.textContent = error.message;
+                        statusElement.style.display = 'block';
+                        statusElement.className = 'payment-status error';
+                        statusElement.textContent = 'Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie.';
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Zapłać kartą';
+                    } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+                        // Успешная оплата
+                        errorElement.textContent = ''; // Очищаем ошибки
+                        statusElement.style.display = 'block';
+                        statusElement.className = 'payment-status success';
+                        statusElement.textContent = 'Płatność zakończona sukcesem!';
+
+                        // Обновляем статус заказа в localStorage
+                        updateOrderStatusInLocalStorage('completed');
+
+                        // Перенаправляем на страницу подтверждения
+                        setTimeout(() => {
+                            window.location.href = `order-confirmation.html?orderId=${orderId}`;
+                        }, 2000);
+                    } else {
+                        // Неожиданный статус
+                        console.log('Unexpected paymentIntent status:', paymentIntent.status);
+                        errorElement.textContent = 'Wystąpił неoczekiwany błąd. Spróbuj ponownie.';
+                        statusElement.style.display = 'block';
+                        statusElement.className = 'payment-status error';
+                        statusElement.textContent = 'Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie.';
+                        submitButton.disabled = false;
+                        submitButton.textContent = 'Zapłać kartą';
+                    }
+                } catch (error) {
+                    console.error('Payment processing error:', error);
+                    const errorElement = document.getElementById('card-errors');
+                    const statusElement = document.getElementById('payment-status');
+                    errorElement.textContent = 'Wystąpił критический błąd podczas przetwarzania płatności. Spróbuj ponownie.';
+                    statusElement.style.display = 'block';
+                    statusElement.className = 'payment-status error';
+                    statusElement.textContent = 'Wystąpił błąd podczas przetwarzania płatności. Spróbuj ponownie.';
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Zapłać kartą';
+                }
+            });
+        }
+
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Payment page loaded, initializing...');
+            // Автоматически выбираем первый метод оплаты (Карта) при загрузке
+            const firstPaymentMethod = document.querySelector('.payment-method');
+            if (firstPaymentMethod) {
+                firstPaymentMethod.click();
+            }
+            console.log('Payment page initialization complete.');
+        });
+    </script>
+</body>
+
+</html>

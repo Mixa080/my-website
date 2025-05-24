@@ -347,6 +347,46 @@
         </div>
     </div>
 
+    <!-- Модальное окно оплаты -->
+    <div class="modal" id="payment-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Płatność za zamówienie</h3>
+                <button class="close-payment-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="payment-form">
+                    <div class="form-group">
+                        <label for="payment-method">Wybierz metodę płatności:</label>
+                        <select id="payment-method" required>
+                            <option value="">-- Wybierz --</option>
+                            <option value="card">Karta płatnicza</option>
+                            <option value="blik">BLIK</option>
+                            <option value="przelew">Przelew bankowy</option>
+                        </select>
+                    </div>
+                    <div class="form-group" id="card-fields" style="display:none;">
+                        <label for="card-number">Numer karty</label>
+                        <input type="text" id="card-number" maxlength="19" placeholder="0000 0000 0000 0000">
+                        <label for="card-exp">Ważność</label>
+                        <input type="text" id="card-exp" maxlength="5" placeholder="MM/YY">
+                        <label for="card-cvc">CVC</label>
+                        <input type="text" id="card-cvc" maxlength="3" placeholder="CVC">
+                    </div>
+                    <div class="form-group" id="blik-fields" style="display:none;">
+                        <label for="blik-code">Kod BLIK</label>
+                        <input type="text" id="blik-code" maxlength="6" placeholder="123456">
+                    </div>
+                    <div class="form-group" id="przelew-fields" style="display:none;">
+                        <label for="przelew-bank">Nazwa banku</label>
+                        <input type="text" id="przelew-bank" placeholder="np. mBank">
+                    </div>
+                    <button type="submit" class="btn-filter" style="margin-top:20px;">Opłać</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <div id="footer-placeholder"></div>
 
     <script>
@@ -420,6 +460,11 @@
             const modal = document.getElementById('order-modal');
             const modalBody = document.getElementById('modal-body');
 
+            let paymentButton = '';
+            if (order.payment.status !== 'Opłacone') {
+                paymentButton = `<button class='btn-filter' style='margin-top:25px;' onclick='openPaymentModal("${order.id}")'>Opłać zamówienie</button>`;
+            }
+
             modalBody.innerHTML = `
                 <div class="order-details">
                     <div class="order-info">
@@ -431,7 +476,7 @@
                         <div class="info-group">
                             <h4>Sposób płatności</h4>
                             <p>${order.payment.method}</p>
-                            <p>${order.payment.status}</p>
+                            <p id="order-status-label">${order.payment.status}</p>
                         </div>
                     </div>
 
@@ -464,11 +509,56 @@
                             <span>${order.total} zł</span>
                         </div>
                     </div>
+                    ${paymentButton}
                 </div>
             `;
 
             modal.style.display = 'block';
         }
+
+        // Открыть модальное окно оплаты
+        function openPaymentModal(orderId) {
+            document.getElementById('order-modal').style.display = 'none';
+            const paymentModal = document.getElementById('payment-modal');
+            paymentModal.setAttribute('data-order-id', orderId);
+            paymentModal.style.display = 'block';
+        }
+
+        // Закрыть модальное окно оплаты
+        document.querySelector('.close-payment-modal').addEventListener('click', () => {
+            document.getElementById('payment-modal').style.display = 'none';
+        });
+        window.addEventListener('click', (e) => {
+            const paymentModal = document.getElementById('payment-modal');
+            if (e.target === paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+
+        // Переключение полей оплаты
+        document.getElementById('payment-method').addEventListener('change', function() {
+            document.getElementById('card-fields').style.display = this.value === 'card' ? 'block' : 'none';
+            document.getElementById('blik-fields').style.display = this.value === 'blik' ? 'block' : 'none';
+            document.getElementById('przelew-fields').style.display = this.value === 'przelew' ? 'block' : 'none';
+        });
+
+        // Фейковая обработка оплаты
+        document.getElementById('payment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const paymentModal = document.getElementById('payment-modal');
+            const orderId = paymentModal.getAttribute('data-order-id');
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            // Меняем статус заказа на "Opłacone"
+            order.payment.status = 'Opłacone';
+            order.payment.method = document.getElementById('payment-method').options[document.getElementById('payment-method').selectedIndex].text;
+            paymentModal.style.display = 'none';
+            // Обновляем детали заказа
+            showOrderDetails(orderId);
+            // Обновляем список заказов
+            displayOrders();
+            alert('Płatność zakończona sukcesem!');
+        });
 
         // Закрыть модальное окно
         document.querySelector('.close-modal').addEventListener('click', () => {

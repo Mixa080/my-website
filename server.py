@@ -28,10 +28,21 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Обработка статических файлов
         if self.path == '/':
             self.path = '/index.html'
-        
         try:
+            print(f"Received request for path: {self.path}")  # Логируем входящий путь
+            # Убираем query string
+            filepath = self.path.split('?', 1)[0][1:]
+            print(f"Looking for file: {filepath}")  # Логируем путь к файлу
+            
+            # Проверяем существование файла
+            if not os.path.exists(filepath):
+                print(f"File not found: {filepath}")
+                self.send_error(404, f"File not found: {filepath}")
+                return
+                
             # Получаем расширение файла
-            file_extension = os.path.splitext(self.path)[1]
+            file_extension = os.path.splitext(filepath)[1]
+            print(f"File extension: {file_extension}")  # Логируем расширение
             
             # Определяем тип контента
             content_types = {
@@ -42,21 +53,24 @@ class RequestHandler(BaseHTTPRequestHandler):
                 '.jpeg': 'image/jpeg',
                 '.png': 'image/png',
                 '.gif': 'image/gif',
-                '.ico': 'image/x-icon'
+                '.ico': 'image/x-icon',
+                '.json': 'application/json'  # Добавляем поддержку JSON
             }
-            
             content_type = content_types.get(file_extension, 'application/octet-stream')
             
-            # Открываем файл
-            with open(self.path[1:], 'rb') as file:
+            with open(filepath, 'rb') as file:
                 self.send_response(200)
                 self.send_header('Content-type', content_type)
+                self.send_header('Access-Control-Allow-Origin', '*')  # Добавляем CORS заголовок
                 self.end_headers()
                 self.wfile.write(file.read())
+                print(f"Successfully served file: {filepath}")  # Логируем успешную отправку
                 
-        except FileNotFoundError:
-            self.send_error(404, "File not found")
+        except FileNotFoundError as e:
+            print(f"FileNotFoundError: {str(e)}")
+            self.send_error(404, f"File not found: {str(e)}")
         except Exception as e:
+            print(f"Error processing request: {str(e)}")
             self.send_error(500, str(e))
 
     def do_POST(self):
@@ -64,14 +78,26 @@ class RequestHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers['Content-Length'])
         # Читаем тело запроса
         post_data = self.rfile.read(content_length)
-        # Парсим данные
-        data = json.loads(post_data.decode('utf-8'))
+        print(f"Received POST data on {self.path}: {post_data.decode('utf-8')}") # Логируем полученные данные
 
         # Обрабатываем разные эндпоинты
         if self.path == '/register':
+            # Парсим данные как JSON для /register
+            data = json.loads(post_data.decode('utf-8'))
             self.handle_register(data)
         elif self.path == '/login':
+             # Парсим данные как JSON для /login
+            data = json.loads(post_data.decode('utf-8'))
             self.handle_login(data)
+        elif self.path == '/payment-callback.html':
+            # Это Fondy callback. Принимаем данные и отправляем успешный ответ.
+            # В реальной интеграции здесь была бы проверка подписи и обновление статуса заказа.
+            print("Received Fondy payment callback.")
+            # Fondy ожидает ответ 200 OK
+            self.send_response(200)
+            self.send_header('Content-type', 'text/plain')
+            self.end_headers()
+            self.wfile.write(b'OK') # Отправляем подтверждение
         else:
             self.send_error(404, "Not Found")
 
