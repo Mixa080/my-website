@@ -9,55 +9,158 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="components/loader.js"></script>
+    <style>
+        .cart-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .cart-item-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .quantity-controls button {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+        
+        .quantity-controls button:hover {
+            background: #f5f5f5;
+        }
+        
+        .quantity-controls span {
+            min-width: 30px;
+            text-align: center;
+        }
+        
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .remove-btn:hover {
+            color: #c0392b;
+        }
+        
+        #cart-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+        }
+        
+        #cart-table th,
+        #cart-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        
+        #cart-table th {
+            background: #f9f9f9;
+            font-weight: 600;
+        }
+        
+        .cart-summary {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .delivery-options {
+            margin-bottom: 20px;
+        }
+        
+        .delivery-option {
+            margin-bottom: 10px;
+        }
+        
+        .delivery-option label {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .delivery-option input[type="radio"] {
+            margin-right: 10px;
+        }
+        
+        .delivery-details {
+            margin-bottom: 20px;
+        }
+        
+        .delivery-details input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .order-summary {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .summary-row.total {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+        }
+        
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        
+        .btn-primary:hover {
+            background: #c0392b;
+        }
+    </style>
 </head>
 
 <body>
-    <!-- Копируем шапку из index.html -->
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-links">
-                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
-                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
-            </div>
-            <div class="top-links">
-                <a href="#">Regulamin</a>
-                <a href="login.html">Moje konto</a>
-            </div>
-        </div>
-    </div>
-
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>TSWOZ</h1>
-                <p>SKLEP ROWEROWY</p>
-            </div>
-            <div class="search-cart">
-                <div class="search-box">
-                    <input type="text" placeholder="Szukaj...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                <div class="cart">
-                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="index.html">Strona główna</a></li>
-                <li><a href="bikes.html">Rowery</a></li>
-                <li><a href="#">Części</a></li>
-                <li><a href="#">Akcesoria</a></li>
-                <li><a href="#">Promocje</a></li>
-                <li><a href="login.html">Moje konto</a></li>
-                <li><a href="login.html">Rejestracja</a></li>
-                <li><a href="#">Kontakt</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div id="header-placeholder"></div>
 
     <main class="cart-page">
         <div class="container">
@@ -143,26 +246,7 @@
             </div>
         </div>
     </main>
-
-    <!-- Копируем footer из index.html -->
-    <footer>
-        <div class="container">
-            <div class="footer-columns">
-                <div class="footer-column">
-                    <h3>O nas</h3>
-                    <p>TSWOZ to sklep rowerowy z tradycjami...</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Kontakt</h3>
-                    <p>Tel: +48 123 456 789</p>
-                    <p>Email: kontakt@tswoz.pl</p>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <script>
         // Инициализация корзины
@@ -182,25 +266,33 @@
                 return;
             }
 
+            emptyCart.style.display = 'none';
+            cartContent.style.display = 'block';
             cartItems.innerHTML = '';
             let total = 0;
 
             cart.forEach((item, index) => {
-                const price = parseFloat(item.price.replace(' zł', '').replace(',', '.'));
-                total += price;
+                const price = parseFloat(item.price);
+                const itemTotal = price * item.quantity;
+                total += itemTotal;
 
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${item.name}</td>
-                    <td>${item.price}</td>
                     <td>
-                        <div class="quantity-controls">
-                            <button onclick="updateQuantity(${index}, -1)">-</button>
-                            <span>1</span>
-                            <button onclick="updateQuantity(${index}, 1)">+</button>
+                        <div class="cart-item">
+                            <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+                            <span>${item.name}</span>
                         </div>
                     </td>
                     <td>${price.toFixed(2)} zł</td>
+                    <td>
+                        <div class="quantity-controls">
+                            <button onclick="updateQuantity(${index}, -1)">-</button>
+                            <span>${item.quantity}</span>
+                            <button onclick="updateQuantity(${index}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td>${itemTotal.toFixed(2)} zł</td>
                     <td>
                         <button onclick="removeItem(${index})" class="remove-btn">
                             <i class="fas fa-times"></i>
@@ -214,6 +306,15 @@
             cartTotal.textContent = total.toFixed(2) + ' zł';
             productsTotal.textContent = total.toFixed(2) + ' zł';
             updateTotalWithDelivery();
+        }
+
+        // Обновление количества товара
+        function updateQuantity(index, change) {
+            if (cart[index].quantity + change > 0) {
+                cart[index].quantity += change;
+                localStorage.setItem('cart', JSON.stringify(cart));
+                updateCart();
+            }
         }
 
         // Обновление общей суммы с доставкой
@@ -263,39 +364,42 @@
                     attribution: '© OpenStreetMap'
                 }).addTo(map);
 
-                // Добавляем точки выдачи
+                // Добавляем маркеры для пунктов выдачи
                 const pickupPoints = [{
-                        coords: [52.2297, 21.0122],
-                        address: 'ul. Rowerowa 1'
-                    }, {
-                        coords: [52.2397, 21.0222],
-                        address: 'ul. Sportowa 15'
-                    },
-                    // Добавьте больше точек
-                ];
+                    lat: 52.2297,
+                    lng: 21.0122,
+                    name: 'Punkt 1'
+                }, {
+                    lat: 52.2397,
+                    lng: 21.0222,
+                    name: 'Punkt 2'
+                }, {
+                    lat: 52.2197,
+                    lng: 21.0022,
+                    name: 'Punkt 3'
+                }];
 
                 pickupPoints.forEach(point => {
-                    const marker = L.marker(point.coords).addTo(map)
-                        .bindPopup(point.address)
-                        .on('click', () => {
-                            document.getElementById('selected-point').textContent =
-                                'Wybrano punkt: ' + point.address;
-                        });
+                    const marker = L.marker([point.lat, point.lng]).addTo(map);
+                    marker.bindPopup(point.name);
+                    marker.on('click', () => {
+                        document.getElementById('selected-point').textContent = `Wybrano punkt: ${point.name}`;
+                    });
                 });
+
+                myMap = map;
             }
         }
 
-        // Отправка формы
+        // Обработка формы заказа
         document.getElementById('order-form').addEventListener('submit', function(e) {
             e.preventDefault();
-            // Здесь добавьте логику отправки заказа
-            alert('Zamówienie zostało przyjęte!');
-            cart.length = 0;
-            localStorage.setItem('cart', JSON.stringify(cart));
+            alert('Dziękujemy za zamówienie!');
+            localStorage.removeItem('cart');
             window.location.href = 'index.html';
         });
 
-        // Инициализация страницы
+        // Инициализация корзины при загрузке страницы
         updateCart();
     </script>
     <script>

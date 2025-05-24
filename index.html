@@ -6,55 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TSWOZ - Sklep Rowerowy</title>
     <link rel="stylesheet" href="1.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">    <script src="components/loader.js" defer></script>
+    <script>
+        console.log('Main script loaded');
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded');
+            console.log('Header placeholder exists:', !!document.getElementById('header-placeholder'));
+            console.log('Footer placeholder exists:', !!document.getElementById('footer-placeholder'));
+        });
+    </script>
 </head>
 
 <body>
-    <div class="top-bar">
-        <div class="container">
-            <div class="top-links">
-                <a href="#"><i class="fas fa-phone"></i> +48 123 456 789</a>
-                <a href="#"><i class="fas fa-envelope"></i> kontakt@tswoz.pl</a>
-            </div>
-            <div class="top-links">
-                <a href="#">Regulamin</a>
-                <a href="login.html">Moje konto</a>
-            </div>
-        </div>
-    </div>
-
-    <header>
-        <div class="container">
-            <div class="logo">
-                <h1>TSWOZ</h1>
-                <p>SKLEP ROWEROWY</p>
-            </div>
-            <div class="search-cart">
-                <div class="search-box">
-                    <input type="text" placeholder="Szukaj...">
-                    <button><i class="fas fa-search"></i></button>
-                </div>
-                <div class="cart">
-                    <a href="cart.html"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="index.html">Strona główna</a></li>
-                <li><a href="bikes.html">Rowery</a></li>
-                <li><a href="#">Części</a></li>
-                <li><a href="#">Akcesoria</a></li>
-                <li><a href="#">Promocje</a></li>
-                <li><a href="login.html">Moje konto</a></li>
-                <li><a href="login.html">Rejestracja</a></li>
-                <li><a href="#">Kontakt</a></li>
-            </ul>
-        </div>
-    </nav>
+    <div id="header-placeholder"></div>
 
     <section class="slider">
         <div class="slide active">
@@ -150,54 +114,7 @@
         </div>
     </section>
 
-    <footer>
-        <div class="container">
-            <div class="footer-columns">
-                <div class="footer-column">
-                    <h3>Informacje</h3>
-                    <ul>
-                        <li><a href="#">O sklepie</a></li>
-                        <li><a href="#">Regulamin</a></li>
-                        <li><a href="#">Polityka prywatności</a></li>
-                        <li><a href="#">Zwroty i reklamacje</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Moje konto</h3>
-                    <ul>
-                        <li><a href="#">Zaloguj się</a></li>
-                        <li><a href="#">Zarejestruj się</a></li>
-                        <li><a href="#">Moje zamówienia</a></li>
-                        <li><a href="#">Lista życzeń</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Kontakt</h3>
-                    <ul>
-                        <li><i class="fas fa-map-marker-alt"></i> ul. Rowerowa 1, 00-001 Warszawa</li>
-                        <li><i class="fas fa-phone"></i> +48 123 456 789</li>
-                        <li><i class="fas fa-envelope"></i> kontakt@tswoz.pl</li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Newsletter</h3>
-                    <p>Zapisz się do newslettera aby otrzymywać informacje o promocjach</p>
-                    <form>
-                        <input type="email" placeholder="Twój email">
-                        <button type="submit" class="btn">Zapisz się</button>
-                    </form>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 TSWOZ Sklep Rowerowy. Wszystkie prawa zastrzeżone.</p>
-                <div class="payment-methods">
-                    <i class="fab fa-cc-visa"></i>
-                    <i class="fab fa-cc-mastercard"></i>
-                    <i class="fab fa-cc-paypal"></i>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <script src="https://api-maps.yandex.ru/2.1/?lang=pl_PL" type="text/javascript"></script>
     <script>
@@ -211,49 +128,54 @@
         }, 3000);
 
         // Логика корзины
-        let cartCount = 0;
-        let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        const cartLink = document.querySelector('.cart a');
-        const addToCartButtons = document.querySelectorAll('.product-card .btn');
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                let cartCount = 0;
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cartLink = document.querySelector('.cart a');
+                const addToCartButtons = document.querySelectorAll('.product-card .btn');
 
-        // При загрузке страницы обновляем счетчик
-        cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
+                if (cartLink) {
+                    // При загрузке страницы обновляем счетчик
+                    cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
 
-        // Добавление товара в корзину
-        addToCartButtons.forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const card = btn.closest('.product-card');
-                const name = card.querySelector('h3').innerText;
-                const price = card.querySelector('.current-price').innerText;
-                const image = card.querySelector('img').src;
+                    // Добавление товара в корзину
+                    addToCartButtons.forEach(btn => {
+                        btn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const card = btn.closest('.product-card');
+                            const name = card.querySelector('h3').innerText;
+                            const price = card.querySelector('.current-price').innerText;
+                            const image = card.querySelector('img').src;
 
-                cart.push({
-                    name,
-                    price,
-                    image,
-                    quantity: 1
-                });
+                            cart.push({
+                                name,
+                                price,
+                                image,
+                                quantity: 1
+                            });
 
-                localStorage.setItem('cart', JSON.stringify(cart));
-                cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
+                            localStorage.setItem('cart', JSON.stringify(cart));
+                            cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
 
-                // Добавляем анимацию добавления в корзину
-                const notification = document.createElement('div');
-                notification.className = 'cart-notification';
-                notification.textContent = 'Dodano do koszyka';
-                document.body.appendChild(notification);
+                            // Добавляем анимацию добавления в корзину
+                            const notification = document.createElement('div');
+                            notification.className = 'cart-notification';
+                            notification.textContent = 'Dodano do koszyka';
+                            document.body.appendChild(notification);
 
-                setTimeout(() => {
-                    notification.remove();
-                }, 2000);
-            });
-        });
+                            setTimeout(() => {
+                                notification.remove();
+                            }, 2000);
+                        });
+                    });
 
-        // Открытие корзины
-        cartLink.addEventListener('click', function(e) {
-            // Не отменяем событие по умолчанию, чтобы происходил переход по ссылке
-            window.location.href = 'cart.html';
+                    // Открытие корзины
+                    cartLink.addEventListener('click', function(e) {
+                        window.location.href = 'cart.html';
+                    });
+                }
+            }, 100); // Небольшая задержка, чтобы убедиться, что header загружен
         });
     </script>
 </body>
