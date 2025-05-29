@@ -1,3 +1,7 @@
+<!--
+Strona logowania użytkownika.
+Umożliwia zalogowanie się do konta i dostęp do funkcji sklepu.
+-->
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -8,6 +12,8 @@
     <link rel="stylesheet" href="1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="components/loader.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/auth.js"></script>
     <style>
         .login-container {
             max-width: 400px;
@@ -96,8 +102,8 @@
         <div id="login-box">
             <h2>Logowanie</h2>
             <div class="form-group">
-                <label for="loginUser">Nazwa użytkownika</label>
-                <input type="text" id="loginUser" placeholder="Wpisz nazwę użytkownika">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="Wpisz swój email">
             </div>
             <div class="form-group">
                 <label for="loginPass">Hasło</label>
@@ -106,18 +112,30 @@
             <button class="btn-login" onclick="login()">Zaloguj się</button>
             <div id="loginMsg"></div>
             <div class="register-link">
-                Nie masz konta? <a href="register.html">Zarejestruj się</a>
+                Nie masz konta? <a onclick="showRegister()">Zarejestruj się</a>
             </div>
         </div>
         <div id="register-box" style="display:none;">
             <h2>Rejestracja</h2>
             <div class="form-group">
-                <label for="regUser">Nazwa użytkownika</label>
-                <input type="text" id="regUser" placeholder="Wpisz nazwę użytkownika">
+                <label for="regName">Imię i nazwisko</label>
+                <input type="text" id="regName" placeholder="Wpisz swoje imię i nazwisko">
+            </div>
+            <div class="form-group">
+                <label for="regEmail">Email</label>
+                <input type="email" id="regEmail" placeholder="Wpisz swój email">
+            </div>
+            <div class="form-group">
+                <label for="regPhone">Telefon</label>
+                <input type="tel" id="regPhone" placeholder="Wpisz swój numer telefonu">
             </div>
             <div class="form-group">
                 <label for="regPass">Hasło</label>
                 <input type="password" id="regPass" placeholder="Wpisz hasło">
+            </div>
+            <div class="form-group">
+                <label for="regPassConfirm">Potwierdź hasło</label>
+                <input type="password" id="regPassConfirm" placeholder="Potwierdź hasło">
             </div>
             <button class="btn-register" onclick="register()">Zarejestruj się</button>
             <div id="regMsg"></div>
@@ -130,6 +148,11 @@
     <div id="footer-placeholder"></div>
 
     <script>
+        // Load users when page loads
+        document.addEventListener('DOMContentLoaded', async() => {
+            await userManager.loadUsers();
+        });
+
         function showRegister() {
             document.getElementById('login-box').style.display = 'none';
             document.getElementById('register-box').style.display = 'block';
@@ -142,30 +165,82 @@
             document.getElementById('regMsg').innerHTML = '';
         }
 
-        function register() {
-            const user = document.getElementById('regUser').value.trim();
+        async function register() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
             const pass = document.getElementById('regPass').value;
-            if (!user || !pass) {
+            const passConfirm = document.getElementById('regPassConfirm').value;
+
+            if (!name || !email || !phone || !pass || !passConfirm) {
                 document.getElementById('regMsg').innerHTML = '<span class="error">Wypełnij wszystkie pola!</span>';
                 return;
             }
-            if (localStorage.getItem('user_' + user)) {
-                document.getElementById('regMsg').innerHTML = '<span class="error">Użytkownik już istnieje!</span>';
+
+            if (pass !== passConfirm) {
+                document.getElementById('regMsg').innerHTML = '<span class="error">Hasła nie są identyczne!</span>';
                 return;
             }
-            localStorage.setItem('user_' + user, pass);
-            document.getElementById('regMsg').innerHTML = '<span class="success">Rejestracja udana! Możesz się zalogować.</span>';
-            setTimeout(showLogin, 1200);
+
+            try {
+                const userData = {
+                    name,
+                    email,
+                    phone,
+                    password: pass,
+                    address: {
+                        street: '',
+                        city: '',
+                        postalCode: '',
+                        country: 'Polska'
+                    }
+                };
+
+                const newUser = await userManager.register(userData);
+                if (newUser) {
+                    document.getElementById('regMsg').innerHTML = '<span class="success">Rejestracja udana! Możesz się zalogować.</span>';
+                    // Clear the form
+                    document.getElementById('regName').value = '';
+                    document.getElementById('regEmail').value = '';
+                    document.getElementById('regPhone').value = '';
+                    document.getElementById('regPass').value = '';
+                    document.getElementById('regPassConfirm').value = '';
+                    setTimeout(showLogin, 1200);
+                }
+            } catch (error) {
+                document.getElementById('regMsg').innerHTML = `<span class="error">${error.message}</span>`;
+            }
         }
 
-        function login() {
-            const user = document.getElementById('loginUser').value.trim();
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPass').value;
-            const stored = localStorage.getItem('user_' + user);
-            if (stored && stored === pass) {
-                document.getElementById('loginMsg').innerHTML = '<span class="success">Zalogowano pomyślnie!</span>';
-            } else {
-                document.getElementById('loginMsg').innerHTML = '<span class="error">Błędny login lub hasło!</span>';
+
+            if (!email || !pass) {
+                document.getElementById('loginMsg').innerHTML = '<span class="error">Wypełnij wszystkie pola!</span>';
+                return;
+            }
+
+            try {
+                // Make sure we have the latest user data
+                await userManager.loadUsers();
+
+                const user = userManager.login(email, pass);
+                if (user) {
+                    document.getElementById('loginMsg').innerHTML = '<span class="success">Zalogowano pomyślnie!</span>';
+                    // Clear the form
+                    document.getElementById('loginEmail').value = '';
+                    document.getElementById('loginPass').value = '';
+                    // Redirect to account page
+                    setTimeout(() => {
+                        window.location.href = 'account.html';
+                    }, 1000);
+                } else {
+                    document.getElementById('loginMsg').innerHTML = '<span class="error">Błędny email lub hasło!</span>';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                document.getElementById('loginMsg').innerHTML = '<span class="error">Wystąpił błąd podczas logowania. Spróbuj ponownie.</span>';
             }
         }
     </script>

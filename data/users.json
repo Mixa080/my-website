@@ -1,0 +1,31 @@
+{
+    "users": [{
+        "id": 1,
+        "name": "Jan Kowalski",
+        "email": "jan.kowalski@example.com",
+        "password": "haslo123",
+        "phone": "+48 123 456 789",
+        "address": {
+            "street": "ul. Przykładowa 123",
+            "city": "Warszawa",
+            "postalCode": "00-001",
+            "country": "Polska"
+        },
+        "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=800&auto=format&fit=crop&q=60",
+        "orders": [{
+            "id": 1,
+            "date": "2024-03-15",
+            "status": "completed",
+            "items": [{
+                "productId": 1,
+                "name": "TSWOZ Pro 29 MTB",
+                "price": 3799.99,
+                "quantity": 1
+            }],
+            "total": 3799.99
+        }],
+        "cart": [],
+        "favorites": [2, 3],
+        "createdAt": "2024-01-01"
+    }]
+}

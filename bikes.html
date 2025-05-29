@@ -1,3 +1,7 @@
+<!--
+Strona z katalogiem rowerów.
+Zawiera listę dostępnych rowerów z filtrowaniem i wyszukiwaniem.
+-->
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -8,6 +12,8 @@
     <link rel="stylesheet" href="1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="components/loader.js"></script>
+    <script src="js/user.js"></script>
+    <script src="js/auth.js"></script>
     <style>
         .catalog-container {
             display: flex;
@@ -266,14 +272,33 @@
         function initCategoryFilters() {
             const categoryFilters = document.getElementById('category-filters');
             categoryFilters.innerHTML = ''; // Очищаем существующие фильтры
+
+            // Проверяем параметры URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryParam = urlParams.get('category');
+
             categories.forEach(category => {
                 const label = document.createElement('label');
-                label.innerHTML = `
-                    <input type="checkbox" value="${category.id}" onchange="applyFilters()">
-                    ${category.name}
-                `;
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = category.id;
+
+                // Если есть параметр категории в URL, проверяем только эту категорию
+                if (categoryParam) {
+                    checkbox.checked = category.id === categoryParam;
+                } else {
+                    // Если нет параметра, проверяем все чекбоксы
+                    checkbox.checked = true;
+                }
+
+                checkbox.onchange = applyFilters;
+                label.appendChild(checkbox);
+                label.appendChild(document.createTextNode(category.name));
                 categoryFilters.appendChild(label);
             });
+
+            // Применяем фильтры после инициализации
+            applyFilters();
         }
 
         // Применение фильтров
