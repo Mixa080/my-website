@@ -1,113 +1,223 @@
 {
     "bikes": [{
             "id": 1,
-            "name": "Rower górski TSWOZ Pro 29\"",
-            "price": 3799,
-            "oldPrice": 4999,
-            "category": "górski",
-            "img": "sco-bike-addict-rc-team_2211488.jpg",
+            "name": "TSWOZ Pro 29 MTB",
+            "price": 3799.99,
+            "oldPrice": 4999.99,
+            "img": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
             "gallery": [
-                "sco-bike-addict-rc-team_2211488.jpg",
-                "Trek_Slash_2021.jpg",
-                "0306cad1b2166940bf862516dd73ef52e362d3fe-6000x4000.jpg"
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
             ],
-            "desc": "Lekki rower górski na kołach 29 cali, idealny na trudny teren.",
+            "desc": "Profesjonalny rower górski z ramą aluminiową, amortyzatorem przednim 120mm i 29-calowymi kołami. Idealny do jazdy terenowej i cross-country.",
+            "category": "mountain",
             "specs": {
-                "Rama": "Aluminium 29\"",
-                "Widelec": "Amortyzowany Suntour",
-                "Hamulce": "Tarcze hydrauliczne Shimano",
-                "Przerzutki": "Shimano Deore 2x10",
-                "Waga": "13.5 kg"
+                "frame": "Aluminium 6061",
+                "fork": "RockShox Recon RL 120mm",
+                "groupset": "Shimano Deore XT 1x12",
+                "wheels": "29\" DT Swiss X1900",
+                "brakes": "Shimano XT M8100",
+                "weight": "12.5 kg"
             }
         },
         {
             "id": 2,
-            "name": "Rower miejski TSWOZ City",
-            "price": 2499,
-            "category": "miejski",
-            "img": "sco-bike-addict-rc-team_2211488.jpg",
+            "name": "TSWOZ City Cruiser",
+            "price": 2499.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
             "gallery": [
-                "sco-bike-addict-rc-team_2211488.jpg",
-                "Trek_Slash_2021.jpg"
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60"
             ],
-            "desc": "Wygodny rower miejski do codziennej jazdy po mieście.",
+            "desc": "Elegancki rower miejski z wygodną pozycją jazdy, koszykiem i błotnikami. Idealny do codziennych przejazdów po mieście.",
+            "category": "city",
             "specs": {
-                "Rama": "Stal miejska",
-                "Widelec": "Sztywny",
-                "Hamulce": "V-brake",
-                "Przerzutki": "Shimano Nexus 7",
-                "Waga": "15.2 kg"
+                "frame": "Stal chrom-molibdenowa",
+                "fork": "Sztywna stalowa",
+                "groupset": "Shimano Nexus 8",
+                "wheels": "28\" aluminiowe",
+                "brakes": "V-brake",
+                "weight": "14.2 kg"
             }
         },
         {
             "id": 3,
-            "name": "Rower szosowy TSWOZ Speed",
-            "price": 5299,
-            "category": "szosowy",
-            "img": "sco-bike-addict-rc-team_2211488.jpg",
+            "name": "TSWOZ Speed Road",
+            "price": 5299.99,
+            "img": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
             "gallery": [
-                "sco-bike-addict-rc-team_2211488.jpg",
-                "Trek_Slash_2021.jpg"
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
             ],
-            "desc": "Szybki rower szosowy dla wymagających kolarzy.",
+            "desc": "Lekki rower szosowy z ramą karbonową, idealny do wyścigów i długodystansowych przejazdów. Wyposażony w wysokiej jakości komponenty.",
+            "category": "road",
             "specs": {
-                "Rama": "Carbon szosowy",
-                "Widelec": "Carbon",
-                "Hamulce": "Tarcze hydrauliczne Shimano",
-                "Przerzutki": "Shimano 105 2x11",
-                "Waga": "8.9 kg"
+                "frame": "Karbon T800",
+                "fork": "Karbonowa",
+                "groupset": "Shimano 105 R7000",
+                "wheels": "700c Fulcrum Racing 5",
+                "brakes": "Shimano 105",
+                "weight": "8.5 kg"
             }
         },
         {
             "id": 4,
-            "name": "Rower górski TSWOZ Trail",
-            "price": 4299,
-            "category": "górski",
-            "img": "sco-bike-addict-rc-team_2211488.jpg",
+            "name": "TSWOZ Trail Master",
+            "price": 4299.99,
+            "oldPrice": 4999.99,
+            "img": "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
             "gallery": [
-                "sco-bike-addict-rc-team_2211488.jpg",
-                "Trek_Slash_2021.jpg"
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
             ],
-            "desc": "Uniwersalny rower górski do jazdy terenowej.",
+            "desc": "Zaawansowany rower górski z pełnym zawieszeniem, idealny do jazdy enduro i trail. Wyposażony w nowoczesne komponenty.",
+            "category": "mountain",
             "specs": {
-                "Rama": "Aluminium 27.5\"",
-                "Widelec": "Amortyzowany RockShox",
-                "Hamulce": "Tarcze hydrauliczne Shimano",
-                "Przerzutki": "Shimano SLX 1x12",
-                "Waga": "12.8 kg"
+                "frame": "Aluminium 6061",
+                "fork": "Fox 36 Float 150mm",
+                "groupset": "SRAM GX Eagle",
+                "wheels": "29\" DT Swiss E1900",
+                "brakes": "SRAM Code R",
+                "weight": "13.8 kg"
             }
         },
         {
             "id": 5,
-            "name": "Rower miejski TSWOZ Comfort",
-            "price": 1999,
-            "category": "miejski",
-            "img": "sco-bike-addict-rc-team_2211488.jpg",
+            "name": "TSWOZ Urban Pro",
+            "price": 3299.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
             "gallery": [
-                "sco-bike-addict-rc-team_2211488.jpg",
-                "Trek_Slash_2021.jpg"
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60"
             ],
-            "desc": "Wygodny rower miejski z wyprostowaną pozycją.",
+            "desc": "Elegancki rower miejski z elektrycznym wspomaganiem. Idealny do codziennych dojazdów do pracy i rekreacji.",
+            "category": "city",
             "specs": {
-                "Rama": "Stal chromowana",
-                "Widelec": "Sztywny",
-                "Hamulce": "V-brake",
-                "Przerzutki": "Shimano Nexus 3",
-                "Waga": "16.5 kg"
+                "frame": "Aluminium 6061",
+                "fork": "Sztywna aluminiowa",
+                "groupset": "Shimano Steps E6100",
+                "wheels": "28\" aluminiowe",
+                "brakes": "Tektro HD-E350",
+                "weight": "22.5 kg"
             }
+        },
+        {
+            "id": 6,
+            "name": "TSWOZ Race Pro",
+            "price": 6299.99,
+            "oldPrice": 6999.99,
+            "img": "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Profesjonalny rower szosowy z ramą karbonową najwyższej jakości. Idealny do wyścigów i treningów.",
+            "category": "road",
+            "specs": {
+                "frame": "Karbon T1000",
+                "fork": "Karbonowa",
+                "groupset": "Shimano Ultegra R8000",
+                "wheels": "700c Fulcrum Racing Zero",
+                "brakes": "Shimano Ultegra",
+                "weight": "7.8 kg"
+            }
+        },
+        {
+            "id": 7,
+            "name": "TSWOZ Air Helmet",
+            "price": 199.99,
+            "oldPrice": 299.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Lekki i przewiewny kask rowerowy z systemem wentylacji. Certyfikowany zgodnie z normami bezpieczeństwa.",
+            "category": "accessories"
+        },
+        {
+            "id": 8,
+            "name": "TSWOZ Pro Pedals",
+            "price": 299.99,
+            "oldPrice": 399.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Profesjonalne pedały SPD z aluminiową platformą. Idealne do jazdy MTB i szosowej.",
+            "category": "parts"
+        },
+        {
+            "id": 9,
+            "name": "TSWOZ Water Bottle",
+            "price": 29.99,
+            "oldPrice": 39.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Pojemna butelka na wodę z izolacją termiczną. Idealna na długie przejazdy.",
+            "category": "accessories"
+        },
+        {
+            "id": 10,
+            "name": "TSWOZ Pro Saddle",
+            "price": 199.99,
+            "oldPrice": 299.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Wygodne siodełko z naturalnej skóry. Idealne do długodystansowych przejazdów.",
+            "category": "parts"
+        },
+        {
+            "id": 11,
+            "name": "TSWOZ Bike Lock",
+            "price": 149.99,
+            "oldPrice": 199.99,
+            "img": "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+            "gallery": [
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60",
+                "https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60"
+            ],
+            "desc": "Solidny zamek rowerowy z zabezpieczeniem antywłamaniowym. Idealny do zabezpieczenia roweru w mieście.",
+            "category": "accessories"
         }
     ],
     "categories": [{
-            "id": "górski",
+            "id": "mountain",
             "name": "Rowery górskie"
         },
         {
-            "id": "miejski",
+            "id": "city",
             "name": "Rowery miejskie"
         },
         {
-            "id": "szosowy",
+            "id": "road",
             "name": "Rowery szosowe"
+        },
+        {
+            "id": "accessories",
+            "name": "Akcesoria"
+        },
+        {
+            "id": "parts",
+            "name": "Części"
         }
     ]
 }

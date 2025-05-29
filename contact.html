@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Kontakt - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 30px;
+        }
+        
+        .contact-info {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-info h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+        
+        .contact-details {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #555;
+        }
+        
+        .contact-item i {
+            width: 40px;
+            height: 40px;
+            background: #f8f8f8;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e74c3c;
+            font-size: 1.2em;
+        }
+        
+        .contact-item a {
+            color: #555;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        
+        .contact-item a:hover {
+            color: #e74c3c;
+        }
+        
+        .contact-form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-form h2 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #e74c3c;
+            outline: none;
+        }
+        
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+        
+        .btn-submit {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        .btn-submit:hover {
+            background: #c0392b;
+        }
+        
+        .map-container {
+            margin-top: 40px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+        }
+        
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <h1>Kontakt</h1>
+
+        <div class="contact-container">
+            <div class="contact-info">
+                <h2>Informacje kontaktowe</h2>
+                <div class="contact-details">
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <strong>Adres:</strong><br> ul. Przykładowa 123<br> 00-000 Warszawa
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Telefon:</strong><br>
+                            <a href="tel:+48123456789">+48 123 456 789</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email:</strong><br>
+                            <a href="mailto:kontakt@tswoz.pl">kontakt@tswoz.pl</a>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-clock"></i>
+                        <div>
+                            <strong>Godziny otwarcia:</strong><br> Poniedziałek - Piątek: 9:00 - 18:00<br> Sobota: 10:00 - 16:00<br> Niedziela: Zamknięte
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contact-form">
+                <h2>Napisz do nas</h2>
+                <form id="contactForm">
+                    <div class="form-group">
+                        <label for="name">Imię i nazwisko</label>
+                        <input type="text" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Temat</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Wiadomość</label>
+                        <textarea id="message" name="message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn-submit">Wyślij wiadomość</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2443.650490016099!2d21.01222977677783!3d52.22967597195595!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x471ecc669a869f01%3A0x72f0be2a88ead3fc!2sWarszawa!5e0!3m2!1spl!2spl!4v1709912345678!5m2!1spl!2spl"
+                allowfullscreen="" loading="lazy"></iframe>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="components/loader.js"></script>
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            alert('Dziękujemy za wiadomość! Skontaktujemy się z Tobą wkrótce.');
+            this.reset();
+        });
+    </script>
+</body>
+
+</html>

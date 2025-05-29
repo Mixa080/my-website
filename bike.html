@@ -3,163 +3,124 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Szczegóły roweru - TSWOZ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSWOZ - Szczegóły roweru</title>
     <link rel="stylesheet" href="1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="bikes.js"></script>
-    <script src="components/loader.js"></script>
+    <script src="components/loader.js" defer></script>
     <style>
-        .product-page {
-            max-width: 1100px;
-            margin: 40px auto;
-            background: #fff;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.07);
-            display: flex;
+        .bike-details {
+            padding: 40px 0;
+        }
+        
+        .bike-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 40px;
-            padding: 40px 30px 30px 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
         
-        .product-gallery {
-            flex: 1 1 400px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .bike-gallery {
+            position: relative;
         }
         
-        .main-img {
+        .main-image {
             width: 100%;
-            max-width: 420px;
+            height: 400px;
+            object-fit: cover;
             border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 18px;
-            transition: 0.2s;
+            margin-bottom: 20px;
         }
         
-        .thumbnails {
-            display: flex;
+        .thumbnail-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 10px;
         }
         
         .thumbnail {
-            width: 60px;
-            height: 45px;
+            width: 100%;
+            height: 100px;
             object-fit: cover;
             border-radius: 4px;
-            border: 2px solid transparent;
             cursor: pointer;
-            transition: border 0.2s;
+            transition: opacity 0.3s;
         }
         
-        .thumbnail.active {
-            border: 2px solid #e74c3c;
+        .thumbnail:hover {
+            opacity: 0.8;
         }
         
-        .product-info {
-            flex: 1 1 400px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
+        .bike-info h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
         }
         
-        .product-info h1 {
-            font-size: 2.1rem;
-            margin-bottom: 18px;
+        .price {
+            font-size: 1.8em;
             color: #e74c3c;
-        }
-        
-        .product-price {
-            font-size: 1.7rem;
-            color: #222;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
         
         .old-price {
-            color: #888;
             text-decoration: line-through;
-            font-size: 1.1rem;
+            color: #999;
+            font-size: 0.7em;
             margin-right: 10px;
         }
         
-        .desc {
-            margin: 18px 0 28px 0;
-            color: #444;
-            font-size: 1.1rem;
-        }
-        
-        .btn-buy {
-            background: #e74c3c;
-            color: #fff;
-            border: none;
-            padding: 15px 35px;
-            border-radius: 5px;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-bottom: 18px;
-        }
-        
-        .btn-buy:hover {
-            background: #c0392b;
-        }
-        
-        .product-details-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 18px;
-        }
-        
-        .product-details-table th,
-        .product-details-table td {
-            border: 1px solid #eee;
-            padding: 8px 12px;
-            text-align: left;
-        }
-        
-        .product-details-table th {
-            background: #f5f5f5;
+        .bike-description {
+            margin-bottom: 30px;
+            line-height: 1.6;
             color: #666;
         }
         
-        .back-link {
-            display: inline-block;
-            margin-top: 30px;
-            color: #e74c3c;
-            text-decoration: underline;
+        .specs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
         }
         
-        @media (max-width: 900px) {
-            .product-page {
-                flex-direction: column;
-                padding: 20px 5px;
-            }
-            .product-gallery img {
-                max-width: 100%;
-            }
+        .specs-table th,
+        .specs-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
         }
         
-        .cart-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #2ecc71;
+        .specs-table th {
+            background-color: #f5f5f5;
+            font-weight: 600;
+        }
+        
+        .specs-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .add-to-cart {
+            background-color: #2ecc71;
             color: white;
-            padding: 15px 25px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            animation: slideIn 0.3s ease-out;
-            z-index: 1000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
         
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+        .add-to-cart:hover {
+            background-color: #27ae60;
+        }
+        
+        @media (max-width: 768px) {
+            .bike-container {
+                grid-template-columns: 1fr;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+            .main-image {
+                height: 300px;
             }
         }
     </style>
@@ -168,134 +129,129 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <!-- Szczegóły produktu -->
-    <div class="container">
-        <div class="product-page" id="product-page" style="display:none;">
-            <div class="product-gallery">
-                <div class="thumbnails" id="thumbnails"></div>
-                <img id="main-img" class="main-img" src="" alt="rower">
+    <section class="bike-details">
+        <div class="bike-container">
+            <div class="bike-gallery">
+                <img id="main-image" class="main-image" src="" alt="Rower">
+                <div class="thumbnail-grid" id="thumbnail-grid"></div>
             </div>
-            <div class="product-info">
+            <div class="bike-info">
                 <h1 id="bike-name"></h1>
-                <div class="product-price" id="bike-price"></div>
-                <div class="desc" id="bike-desc"></div>
-                <button class="btn-buy"><i class="fas fa-shopping-cart"></i> Dodaj do koszyka</button>
-                <a href="bikes.html" class="back-link">&larr; Powrót do katalogu</a>
+                <div class="price">
+                    <span id="old-price" class="old-price"></span>
+                    <span id="current-price"></span>
+                </div>
+                <p id="bike-description" class="bike-description"></p>
+                <table class="specs-table" id="specs-table">
+                    <tbody>
+                        <tr>
+                            <th>Rama</th>
+                            <td id="spec-frame"></td>
+                        </tr>
+                        <tr>
+                            <th>Widelec</th>
+                            <td id="spec-fork"></td>
+                        </tr>
+                        <tr>
+                            <th>Grupa osprzętu</th>
+                            <td id="spec-groupset"></td>
+                        </tr>
+                        <tr>
+                            <th>Koła</th>
+                            <td id="spec-wheels"></td>
+                        </tr>
+                        <tr>
+                            <th>Hamulce</th>
+                            <td id="spec-brakes"></td>
+                        </tr>
+                        <tr>
+                            <th>Waga</th>
+                            <td id="spec-weight"></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="add-to-cart" onclick="addToCart()">Dodaj do koszyka</button>
             </div>
         </div>
-        <div id="tech-details"></div>
-    </div>
+    </section>
+
     <div id="footer-placeholder"></div>
 
     <script>
-        let bike = null;
-        let categories = [];
+        // Pobierz ID roweru z URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const bikeId = urlParams.get('id');
 
-        // Загрузка данных
-        async function loadData() {
-            try {
-                const response = await fetch('data/bikes.json');
-                const data = await response.json();
-                categories = data.categories;
-
-                const id = parseInt(getParam('id'));
-                bike = data.bikes.find(b => b.id === id);
-
+        // Pobierz dane roweru
+        fetch('data/bikes.json')
+            .then(response => response.json())
+            .then(data => {
+                const bike = data.bikes.find(b => b.id === parseInt(bikeId));
                 if (bike) {
-                    displayBike();
-                } else {
-                    document.getElementById('product-page').innerHTML = '<h2>Produkt nie znaleziony</h2>';
-                }
-            } catch (error) {
-                console.error('Błąd ładowania danych:', error);
-            }
-        }
+                    // Ustaw główne informacje
+                    document.getElementById('bike-name').textContent = bike.name;
+                    document.getElementById('current-price').textContent = bike.price.toFixed(2) + ' zł';
+                    if (bike.oldPrice) {
+                        document.getElementById('old-price').textContent = bike.oldPrice.toFixed(2) + ' zł';
+                    }
+                    document.getElementById('bike-description').textContent = bike.desc;
 
-        function getParam(name) {
-            const url = new URL(window.location.href);
-            return url.searchParams.get(name);
-        }
+                    // Ustaw specyfikację
+                    if (bike.specs) {
+                        document.getElementById('spec-frame').textContent = bike.specs.frame;
+                        document.getElementById('spec-fork').textContent = bike.specs.fork;
+                        document.getElementById('spec-groupset').textContent = bike.specs.groupset;
+                        document.getElementById('spec-wheels').textContent = bike.specs.wheels;
+                        document.getElementById('spec-brakes').textContent = bike.specs.brakes;
+                        document.getElementById('spec-weight').textContent = bike.specs.weight;
+                    }
 
-        function displayBike() {
-            document.getElementById('product-page').style.display = 'flex';
-            document.getElementById('bike-name').textContent = bike.name;
-            document.getElementById('bike-desc').textContent = bike.desc;
+                    // Ustaw galerię zdjęć
+                    const mainImage = document.getElementById('main-image');
+                    mainImage.src = bike.img;
+                    mainImage.alt = bike.name;
 
-            // Форматирование цены
-            const priceElement = document.getElementById('bike-price');
-            if (bike.oldPrice) {
-                priceElement.innerHTML = `<span class="old-price">${bike.oldPrice} zł</span> ${bike.price} zł`;
-            } else {
-                priceElement.textContent = `${bike.price} zł`;
-            }
-
-            // Галерея изображений
-            const mainImg = document.getElementById('main-img');
-            const thumbnailsContainer = document.getElementById('thumbnails');
-
-            const images = bike.gallery || [bike.img];
-            mainImg.src = images[0];
-
-            images.forEach((img, index) => {
-                const thumb = document.createElement('img');
-                thumb.src = img;
-                thumb.className = 'thumbnail' + (index === 0 ? ' active' : '');
-                thumb.onclick = () => {
-                    mainImg.src = img;
-                    document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-                    thumb.classList.add('active');
-                };
-                thumbnailsContainer.appendChild(thumb);
-            });
-
-            // Технические детали
-            const techDetails = document.getElementById('tech-details');
-            if (bike.specs) {
-                const table = document.createElement('table');
-                table.className = 'product-details-table';
-                Object.entries(bike.specs).forEach(([key, value]) => {
-                    const row = table.insertRow();
-                    row.insertCell().textContent = key;
-                    row.insertCell().textContent = value;
-                });
-                techDetails.appendChild(table);
-            }
-
-            // Добавление в корзину
-            const addToCartBtn = document.querySelector('.btn-buy');
-            addToCartBtn.addEventListener('click', function() {
-                let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-                // Проверяем, есть ли уже такой товар в корзине
-                const existingItem = cart.find(item => item.id === bike.id);
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cart.push({
-                        id: bike.id,
-                        name: bike.name,
-                        price: bike.price,
-                        img: bike.img,
-                        quantity: 1
+                    const thumbnailGrid = document.getElementById('thumbnail-grid');
+                    bike.gallery.forEach((img, index) => {
+                        const thumbnail = document.createElement('img');
+                        thumbnail.src = img;
+                        thumbnail.alt = `${bike.name} - zdjęcie ${index + 1}`;
+                        thumbnail.className = 'thumbnail';
+                        thumbnail.onclick = () => {
+                            mainImage.src = img;
+                        };
+                        thumbnailGrid.appendChild(thumbnail);
                     });
                 }
-
-                localStorage.setItem('cart', JSON.stringify(cart));
-
-                // Показываем уведомление
-                const notification = document.createElement('div');
-                notification.className = 'cart-notification';
-                notification.textContent = 'Dodano do koszyka';
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.remove();
-                }, 2000);
             });
-        }
 
-        // Загрузка данных при загрузке страницы
-        loadData();
+        function addToCart() {
+            // Pobierz dane roweru
+            fetch('data/bikes.json')
+                .then(response => response.json())
+                .then(data => {
+                    const bike = data.bikes.find(b => b.id === parseInt(bikeId));
+                    if (bike) {
+                        // Pobierz aktualny koszyk
+                        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                        // Dodaj rower do koszyka
+                        cart.push({
+                            id: bike.id,
+                            name: bike.name,
+                            price: bike.price,
+                            img: bike.img,
+                            quantity: 1
+                        });
+
+                        // Zapisz koszyk
+                        localStorage.setItem('cart', JSON.stringify(cart));
+
+                        // Pokaż powiadomienie
+                        alert('Dodano do koszyka!');
+                    }
+                });
+        }
     </script>
 </body>
 
