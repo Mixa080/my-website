@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', function() {
             if (headerPlaceholder) {
                 headerPlaceholder.innerHTML = data;
                 console.log('Header loaded successfully');
+                // Call the updateCartCounter function after the header is loaded
+                if (window.updateCartCounter) {
+                    window.updateCartCounter();
+                }
             } else {
                 console.error('Header placeholder not found');
             }

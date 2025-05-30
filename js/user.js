@@ -285,7 +285,36 @@ class UserManager {
 
         return true;
     }
+
+    // Add a function to update the cart counter in the header
+    updateCartCounter() {
+        const cartCounterElement = document.getElementById('cart-counter');
+        if (!cartCounterElement) return;
+
+        try {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            cartCounterElement.textContent = `Koszyk (${totalItems})`;
+        } catch (error) {
+            console.error('Error updating cart counter:', error);
+            cartCounterElement.textContent = 'Koszyk (0)'; // Fallback to 0 on error
+        }
+    }
 }
 
 // Create global user manager instance
 const userManager = new UserManager();
+
+// Listen for storage changes to update UI (like cart counter)
+window.addEventListener('storage', function(event) {
+    if (event.key === 'cart') {
+        // Update the cart array in userManager if needed
+        // userManager.loadCart(); // If cart is stored within user object
+
+        // Call the global function to update the counter
+        updateCartCounter();
+    }
+});
+
+// Make the updateCartCounter function globally accessible
+window.updateCartCounter = userManager.updateCartCounter;

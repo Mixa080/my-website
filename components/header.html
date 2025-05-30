@@ -26,7 +26,7 @@
                 <button><i class="fas fa-search"></i></button>
             </div>
             <div class="cart">
-                <a href="cart.html"><i class="fas fa-shopping-cart"></i> Koszyk (0)</a>
+                <a href="cart.html"><i class="fas fa-shopping-cart"></i> <span id="cart-counter">Koszyk (0)</span></a>
             </div>
         </div>
     </div>
@@ -34,7 +34,7 @@
 
 <nav>
     <div class="container">
-        <ul>
+        <ul style="display: flex; gap: 20px; padding: 0;">
             <li><a href="index.html">Strona główna</a></li>
             <li><a href="bikes.html">Rowery</a>
                 <ul class="submenu">
@@ -43,9 +43,7 @@
                     <li><a href="bikes.html?category=road">Rowery szosowe</a></li>
                 </ul>
             </li>
-            <li><a href="parts.html">Części</a></li>
             <li><a href="accessories.html">Akcesoria</a></li>
-            <li><a href="sale.html">Promocje</a></li>
             <li><a href="login.html">Moje konto</a></li>
             <li><a href="register.html">Rejestracja</a></li>
             <li><a href="contact.html">Kontakt</a></li>
@@ -71,7 +69,6 @@
         mobileMenuBtn.addEventListener('click', toggleMenu);
         overlay.addEventListener('click', toggleMenu);
 
-        // Close menu when clicking a link
         const navLinks = document.querySelectorAll('nav a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
@@ -79,6 +76,32 @@
                     toggleMenu();
                 }
             });
+        });
+
+        // Function to update the cart counter
+        function updateCartCounter() {
+            const cartCounterElement = document.getElementById('cart-counter');
+            if (!cartCounterElement) return;
+
+            try {
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+                cartCounterElement.textContent = `Koszyk (${totalItems})`;
+            } catch (error) {
+                console.error('Error updating cart counter:', error);
+                cartCounterElement.textContent = 'Koszyk (0)'; // Fallback to 0 on error
+            }
+        }
+
+        // Update the counter when the header is loaded
+        updateCartCounter();
+
+        // Add an event listener to update the counter
+        // whenever the cart in localStorage changes from another page/script.
+        window.addEventListener('storage', function(event) {
+            if (event.key === 'cart') {
+                updateCartCounter();
+            }
         });
     });
 </script>

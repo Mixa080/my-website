@@ -1,7 +1,3 @@
-<!--
-Strona koszyka zakupowego.
-Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do płatności.
--->
 <!DOCTYPE html>
 <html lang="pl">
 
@@ -269,7 +265,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
         .btn-select-point:hover {
             background: #c0392b;
         }
-        /* Стили для модального контейнера Fondy */
         
         #fondy-checkout-container {
             position: fixed;
@@ -278,39 +273,24 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.6);
-            /* Полупрозрачный темный фон */
             z-index: 1000;
-            /* Убедимся, что контейнер поверх всего */
             display: flex;
-            /* Используем flexbox для центрирования */
             justify-content: center;
-            /* Центрирование по горизонтали */
             align-items: center;
-            /* Центрирование по вертикали */
             padding: 20px;
-            /* Добавим немного отступа */
             overflow-y: auto;
-            /* Добавить прокрутку только по вертикали, если содержимое больше высоты */
             overflow-x: hidden;
-            /* Скрыть горизонтальную прокрутку */
         }
-        /* Стили для содержимого Fondy внутри контейнера */
         
         #fondy-checkout-container #fondy-form-inner {
             background-color: white;
-            /* Фон формы Fondy */
             padding: 30px;
-            /* Увеличим padding */
             border-radius: 8px;
             max-width: 95%;
-            /* Сделаем модальное окно очень широким */
             width: 90%;
-            /* Позволим использовать до 90% ширины родителя */
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
             position: relative;
-            /* Для позиционирования кнопки закрытия */
         }
-        /* Стили для кнопки закрытия */
         
         .fondy-close-button {
             position: absolute;
@@ -319,20 +299,16 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             font-size: 24px;
             font-weight: bold;
             color: #aaa;
-            /* Цвет крестика */
             cursor: pointer;
             z-index: 10;
-            /* Поверх содержимого Fondy */
         }
         
         .fondy-close-button:hover {
             color: #777;
         }
-        /* Стили для управления прокруткой тела страницы при активном модальном окне */
         
         body.modal-open {
             overflow: hidden;
-            /* Запретить прокрутку основного контента */
         }
     </style>
 </head>
@@ -410,27 +386,8 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                             </div>
                         </div>
 
-                        <h2>Оплата</h2>
-                        <div class="payment-options">
-                            <div class="payment-option">
-                                <input type="radio" id="payment-card" name="payment" value="card" checked>
-                                <label for="payment-card">
-                                    <span>Онлайн картой (Fondy)</span>
-                                </label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" id="payment-cod" name="payment" value="cod">
-                                <label for="payment-cod">
-                                    <span>Оплата при получении</span>
-                                </label>
-                            </div>
-                            <div class="payment-option">
-                                <input type="radio" id="payment-store" name="payment" value="store">
-                                <label for="payment-store">
-                                    <span>Оплата в магазине</span>
-                                </label>
-                            </div>
-                        </div>
+                        <h2>Płatność</h2>
+
 
                         <div class="order-summary">
                             <div class="summary-row">
@@ -449,7 +406,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
 
                         <button type="submit" class="btn-primary" id="submit-order">Zamów</button>
                     </form>
-                    <!-- Контейнер для Fondy Checkout -->
                     <div id="fondy-checkout-container" style="display: none;">
                         <span class="fondy-close-button">&times;</span>
                         <div id="fondy-form-inner"></div>
@@ -461,13 +417,11 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
     <div id="footer-placeholder"></div>
 
     <script>
-        // Инициализация корзины
         let cart = [];
         let selectedPoint = null;
         let map = null;
         let markers = [];
 
-        // Загрузка корзины из localStorage
         function loadCart() {
             try {
                 const savedCart = localStorage.getItem('cart');
@@ -479,7 +433,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
         }
 
-        // Отображение товаров
         function updateCart() {
             console.log('Updating cart display...');
 
@@ -544,7 +497,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                 cartItems.appendChild(tr);
             });
 
-            // Обновляем все суммы
             cartTotal.textContent = totalAmount.toFixed(2) + ' zł';
             subtotal.textContent = totalAmount.toFixed(2) + ' zł';
             total.textContent = totalAmount.toFixed(2) + ' zł';
@@ -552,7 +504,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             console.log('Cart display updated successfully');
         }
 
-        // Обновление количества товара
         function updateQuantity(index, change) {
             if (cart[index].quantity + change > 0) {
                 cart[index].quantity += change;
@@ -561,14 +512,12 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
         }
 
-        // Удаление товара
         function removeItem(index) {
             cart.splice(index, 1);
             localStorage.setItem('cart', JSON.stringify(cart));
             updateCart();
         }
 
-        // Пункты выдачи
         const pickupPoints = [{
             id: 1,
             name: 'Punkt odbioru Warszawa Centrum',
@@ -619,18 +568,15 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             position: [50.0264, 36.3112]
         }];
 
-        // Инициализация карты
         function initMap() {
             console.log('initMap called.');
 
-            // Проверяем, загружена ли библиотека Leaflet
             if (typeof L === 'undefined') {
                 console.error('Leaflet library not loaded. Cannot initialize map.');
                 return;
             }
             console.log('Leaflet library detected.');
 
-            // Очищаем старую карту, если она существует
             if (map) {
                 console.log('Removing existing map instance.');
                 map.remove();
@@ -639,7 +585,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
 
             try {
-                // Создаем карту
                 const mapElement = document.getElementById('map');
                 if (!mapElement) {
                     console.error('Map element #map not found in the DOM.');
@@ -647,11 +592,9 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                 }
                 console.log('Map element #map found.', mapElement);
 
-                // Проверяем, видим ли контейнер карты
                 const mapContainer = document.getElementById('map-container');
                 if (mapContainer && mapContainer.style.display === 'none') {
                     console.warn('Map container is hidden. Delaying map initialization.');
-                    // Если контейнер скрыт, попробуем инициализировать позже
                     setTimeout(initMap, 500);
                     return;
                 }
@@ -665,15 +608,13 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                 });
                 console.log('L.map initialized.');
 
-                // Добавляем слой OpenStreetMap
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
                     maxZoom: 19
                 }).addTo(map);
                 console.log('Tile layer added.');
 
-                // Добавляем маркеры
-                markers = []; // Очищаем массив маркеров
+                markers = [];
                 pickupPoints.forEach(point => {
                     const marker = L.marker(point.position).addTo(map);
                     const popupContent = document.createElement('div');
@@ -682,7 +623,7 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                         <h4>${point.name}</h4>
                         <p>${point.address}</p>
                         <p>${point.hours}</p>
-                        <button onclick="selectPickupPoint(${point.id})" class="btn-select-point">
+                        <button onclick="selectPickupPoint(${point.id})}" class="btn-select-point">
                             Wybierz ten punkt
                         </button>
                     `;
@@ -692,7 +633,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                 });
                 console.log(`Added ${markers.length} markers.`);
 
-                // Устанавливаем границы карты
                 if (pickupPoints.length > 0) {
                     const bounds = L.latLngBounds(pickupPoints.map(point => point.position));
                     map.fitBounds(bounds, {
@@ -703,8 +643,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                     console.warn('No pickup points available to fit bounds.');
                 }
 
-                // Обновляем размер карты
-                // Это важно, если контейнер был скрыт при инициализации
                 setTimeout(() => {
                     if (map) {
                         map.invalidateSize();
@@ -712,7 +650,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                     }
                 }, 100);
 
-                // Обновляем список пунктов выдачи
                 updatePickupPointsList();
                 console.log('Pickup points list updated.');
 
@@ -722,12 +659,11 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
         }
 
-        // Обновление списка пунктов выдачи
         function updatePickupPointsList() {
             const pointsList = document.getElementById('pickup-points-list');
             pointsList.innerHTML = pickupPoints.map(p => `
                 <div class="pickup-point ${selectedPoint && p.id === selectedPoint.id ? 'selected' : ''}" 
-                     onclick="selectPickupPoint(${p.id})">
+                     onclick="selectPickupPoint(${p.id})}">
                     <h4>${p.name}</h4>
                     <p>${p.address}</p>
                     <p>${p.hours}</p>
@@ -735,7 +671,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             `).join('');
         }
 
-        // Функция выбора пункта выдачи
         function selectPickupPoint(pointId) {
             console.log('Selecting point:', pointId);
             const point = pickupPoints.find(p => p.id === pointId);
@@ -747,17 +682,14 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             selectedPoint = point;
             console.log('Selected point:', selectedPoint);
 
-            // Обновляем список
             updatePickupPointsList();
 
-            // Обновляем информацию
             const infoContainer = document.getElementById('selected-point-info');
             document.getElementById('selected-point-name').textContent = point.name;
             document.getElementById('selected-point-address').textContent = point.address;
             document.getElementById('selected-point-hours').textContent = point.hours;
             infoContainer.style.display = 'block';
 
-            // Обновляем карту
             if (map) {
                 map.setView(point.position, 14);
                 markers.forEach((marker, index) => {
@@ -768,14 +700,12 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
         }
 
-        // Обработчик переключения способа доставки
         document.querySelectorAll('input[name="delivery"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 console.log('Delivery method changed:', this.value);
                 const mapContainer = document.getElementById('map-container');
                 const addressForm = document.querySelector('.delivery-details:not(#map-container)');
                 const submitButton = document.getElementById('submit-order');
-                // const addressInputs = addressForm.querySelectorAll('input'); // Больше не используется для required
 
                 if (this.value === 'pickup') {
                     console.log('Showing map container, hiding address form.');
@@ -783,13 +713,10 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                     addressForm.style.display = 'none';
                     submitButton.disabled = false;
 
-                    // Убираем required с полей адреса
                     document.getElementById('address').removeAttribute('required');
                     document.getElementById('city').removeAttribute('required');
                     document.getElementById('postal-code').removeAttribute('required');
 
-                    // Инициализируем карту после отображения контейнера
-                    // Увеличиваем задержку для гарантии отображения контейнера
                     setTimeout(() => {
                         initMap();
                     }, 500);
@@ -799,27 +726,22 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
                     addressForm.style.display = 'block';
                     submitButton.disabled = false;
 
-                    // Возвращаем required для полей адреса (кроме почтового индекса)
                     document.getElementById('address').setAttribute('required', 'required');
                     document.getElementById('city').setAttribute('required', 'required');
-                    // Почтовый индекс остается необязательным
                     document.getElementById('postal-code').removeAttribute('required');
 
-                    // Очищаем карту при переключении на курьерскую доставку
                     if (map) {
                         console.log('Removing map on courier selection.');
                         map.remove();
                         map = null;
                         markers = [];
                     }
-                    // Скрываем информацию о выбранном пункте
                     document.getElementById('selected-point-info').style.display = 'none';
                     selectedPoint = null;
                 }
             });
         });
 
-        // Обработчик изменения размера окна
         window.addEventListener('resize', function() {
             console.log('Window resized, invalidating map size.');
             if (map) {
@@ -827,7 +749,6 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             }
         });
 
-        // Функция обработки отправки формы
         async function handleOrderSubmit(event) {
             event.preventDefault();
             console.log('Form submission started');
@@ -835,12 +756,9 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             const deliveryMethod = document.querySelector('input[name="delivery"]:checked').value;
             console.log('Delivery method:', deliveryMethod);
 
-            // Проверка полей адреса только для курьерской доставки
             if (deliveryMethod === 'courier') {
                 const address = document.getElementById('address').value;
                 const city = document.getElementById('city').value;
-                // Почтовый индекс теперь необязателен
-                // const postalCode = document.getElementById('postal-code').value;
 
                 if (!address || !city) {
                     alert('Wypełnij wymagane pola adresowe: Adres dostawy i Miasto.');
@@ -852,190 +770,131 @@ Zawiera listę wybranych produktów, możliwość zmiany ilości i przejścia do
             const totalValue = parseFloat(total.replace(' zł', ''));
             const orderId = 'ORD-' + Date.now();
 
-            // Получаем текущие товары в корзине
             const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
 
-            // --- ЛОГИКА В ЗАВИСИМОСТИ ОТ МЕТОДА ОПЛАТЫ ---
-            const selectedPaymentMethodElement = document.querySelector('input[name="payment"]:checked');
-            const paymentMethod = selectedPaymentMethodElement ? selectedPaymentMethodElement.value : 'card'; // По умолчанию онлайн картой
-            console.log('Selected payment method:', paymentMethod);
+            const fondyPaymentParams = {
+                merchant_id: 1396424,
+                order_id: orderId,
+                order_desc: 'Zakup w sklepie TSWOZ',
+                amount: Math.round(totalValue * 100),
+                currency: 'UAH',
+                server_callback_url: `${window.location.origin}/payment-callback.html`,
+                response_url: `${window.location.origin}/order-confirmation.html?orderId=${orderId}`,
+                lang: 'pl',
+                sender_email: 'customer@example.com',
+                product_id: cartItems.map(item => item.id).join(','),
+                required_rectoken: 'N',
+                payment_systems: 'card,p24,googlePay,applePay',
+                show_saved_cards: 'Y',
+                lifetime: 3600,
+                preauth: 'N',
+                verification: 'N',
+                verification_type: 'code',
+                rectoken: 'N',
+                design_id: '1',
+                delivery: deliveryMethod === 'courier' ?
+                    `${document.getElementById('address').value}, ${document.getElementById('city').value}` : selectedPoint ? `${selectedPoint.name}, ${selectedPoint.address}` : '',
+                items: cartItems.map(item => ({
+                    name: item.name,
+                    amount: Math.round(parseFloat(item.price) * 100),
+                    quantity: item.quantity,
+                    image: item.img
+                }))
+            };
 
-            // Сохраняем базовый заказ (статус будет обновлен позже)
-            const order = {
-                id: orderId,
-                date: new Date().toLocaleDateString(),
-                status: 'processing', // Начальный статус
-                total: totalValue,
-                items: cartItems,
-                shipping: {
-                    method: deliveryMethod,
-                    ...(deliveryMethod === 'courier' ? {
-                        address: document.getElementById('address').value,
-                        city: document.getElementById('city').value,
-                        postalCode: document.getElementById('postal-code').value
-                    } : {
-                        pickupPoint: selectedPoint
-                    })
+            const fondyOptions = {
+                options: {
+                    full_screen: true,
+                    button: true,
+                    methods: ['card', 'banklinks_eu', 'wallets', 'local_methods'],
+                    card_icons: ['mastercard', 'visa', 'maestro'],
+                    default_country: 'PL',
+                    countries: ["PL", "UA"],
+                    locales: ['pl', 'uk', 'en'],
+                    email: true,
+                    theme: {
+                        type: "light",
+                        preset: "navy_shimmer"
+                    }
                 },
-                payment: {
-                    method: paymentMethod,
-                    status: 'pending' // Начальный статус оплаты
+                params: fondyPaymentParams,
+                messages: {
+                    pl: {
+                        card_number: 'Numer karty',
+                        my_title: 'Cel płatności',
+                        my_order_desc: 'Płatność testowa'
+                    },
+                    uk: {
+                        card_number: 'Номер карти',
+                        my_title: 'Призначення платежу',
+                        my_order_desc: 'Тестова оплата'
+                    }
                 }
             };
 
-            console.log('Saving order:', order);
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            orders.push(order);
-            localStorage.setItem('orders', JSON.stringify(orders));
-            localStorage.removeItem('cart'); // Очищаем корзину после создания заказа
-
-            if (paymentMethod === 'card') {
-                // --- ИНТЕГРАЦИЯ FONDY (онлайн оплата) ---
-                console.log('Initiating Fondy payment...');
-
-                // Создаем объект с параметрами платежа (для передачи в Fondy)
-                const fondyPaymentParams = {
-                    merchant_id: 1396424, // Ваш merchant_id (теперь число)
-                    order_id: orderId,
-                    order_desc: 'Zakup w sklepie TSWOZ',
-                    amount: Math.round(totalValue * 100), // Сумма в копейках
-                    currency: 'UAH', // Валюта (измените, если нужно)
-                    server_callback_url: `${window.location.origin}/payment-callback.html`,
-                    response_url: `${window.location.origin}/order-confirmation.html?orderId=${orderId}`,
-                    lang: 'pl',
-                    sender_email: 'customer@example.com', // В реальном приложении нужно получать email пользователя
-                    product_id: cartItems.map(item => item.id).join(','),
-                    required_rectoken: 'N',
-                    payment_systems: 'card,p24,googlePay,applePay',
-                    show_saved_cards: 'Y',
-                    lifetime: 3600,
-                    preauth: 'N',
-                    verification: 'N',
-                    verification_type: 'code',
-                    rectoken: 'N',
-                    design_id: '1',
-                    delivery: deliveryMethod === 'courier' ?
-                        `${document.getElementById('address').value}, ${document.getElementById('city').value}` : selectedPoint ? `${selectedPoint.name}, ${selectedPoint.address}` : '',
-                    items: cartItems.map(item => ({
-                        name: item.name,
-                        amount: Math.round(parseFloat(item.price) * 100),
-                        quantity: item.quantity,
-                        image: item.img
-                    }))
-                };
-
-                // Создаем объект опций для Fondy Checkout v2
-                const fondyOptions = {
-                    options: {
-                        full_screen: true, // Открывать в полноэкранном режиме (или modal)
-                        button: true, // **Показываем стандартную кнопку Fondy**
-                        methods: ['card', 'banklinks_eu', 'wallets', 'local_methods'],
-                        card_icons: ['mastercard', 'visa', 'maestro'],
-                        default_country: 'PL',
-                        countries: ["PL", "UA"], // Указываем страны, если нужно ограничить
-                        locales: ['pl', 'uk', 'en'],
-                        email: true, // Показывать поле email, если нужно
-                        theme: { // Пример настройки темы
-                            type: "light",
-                            preset: "navy_shimmer"
-                        }
+            try {
+                const order = {
+                    id: orderId,
+                    date: new Date().toLocaleDateString(),
+                    status: 'processing',
+                    total: totalValue,
+                    items: cartItems,
+                    shipping: {
+                        method: deliveryMethod,
+                        ...(deliveryMethod === 'courier' ? {
+                            address: document.getElementById('address').value,
+                            city: document.getElementById('city').value,
+                            postalCode: document.getElementById('postal-code').value
+                        } : {
+                            pickupPoint: selectedPoint
+                        })
                     },
-                    params: fondyPaymentParams,
-                    messages: { // Опционально: локализация сообщений
-                        pl: {
-                            card_number: 'Numer karty',
-                            my_title: 'Cel płatności',
-                            my_order_desc: 'Płatność testowa'
-                        },
-                        uk: {
-                            card_number: 'Номер карти',
-                            my_title: 'Призначення платежу',
-                            my_order_desc: 'Тестова оплата'
-                        }
+                    payment: {
+                        method: 'card',
+                        status: 'pending',
+                        paymentId: orderId
                     }
                 };
 
-                try {
-                    // Сохраняем заказ перед инициализацией Fondy
-                    const order = {
-                        id: orderId,
-                        date: new Date().toLocaleDateString(),
-                        status: 'processing',
-                        total: totalValue,
-                        items: cartItems,
-                        shipping: {
-                            method: deliveryMethod,
-                            ...(deliveryMethod === 'courier' ? {
-                                address: document.getElementById('address').value,
-                                city: document.getElementById('city').value,
-                                postalCode: document.getElementById('postal-code').value
-                            } : {
-                                pickupPoint: selectedPoint
-                            })
-                        },
-                        payment: {
-                            method: 'card',
-                            status: 'pending',
-                            paymentId: orderId // Временный ID, будет обновлен колбэком
-                        }
-                    };
+                console.log('Saving order before Fondy init:', order);
+                const orders = JSON.parse(localStorage.getItem('orders')) || [];
+                orders.push(order);
+                localStorage.setItem('orders', JSON.stringify(orders));
+                localStorage.removeItem('cart');
 
-                    console.log('Saving order before Fondy init:', order);
-                    const orders = JSON.parse(localStorage.getItem('orders')) || [];
-                    orders.push(order);
-                    localStorage.setItem('orders', JSON.stringify(orders));
-                    localStorage.removeItem('cart');
+                fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
 
-                    // Инициализируем Fondy Checkout в контейнере
-                    // Используем функцию fondy(), определенную новым скриптом
-                    fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
-
-                    // Показываем контейнер с формой Fondy (если он был скрыт)
-                    const fondyContainer = document.getElementById('fondy-checkout-container');
-                    if (fondyContainer) {
-                        fondyContainer.style.display = 'flex'; // Используем flex для центрирования
-                        document.body.classList.add('modal-open'); // Добавляем класс для управления прокруткой тела
-                    }
-
-                    // Добавляем обработчик закрытия модального окна
-                    const closeButton = fondyContainer.querySelector('.fondy-close-button');
-                    if (closeButton) {
-                        closeButton.addEventListener('click', function() {
-                            fondyContainer.style.display = 'none';
-                            document.body.classList.remove('modal-open');
-                            // Очищаем содержимое контейнера Fondy при закрытии
-                            const fondyInner = fondyContainer.querySelector('#fondy-form-inner');
-                            if (fondyInner) {
-                                fondyInner.innerHTML = '';
-                            }
-                        });
-                    }
-
-                } catch (error) {
-                    console.error('Error during Fondy payment initialization:', error);
-                    alert('Wystąpił błąd podczas inicjowania płatności. Spróbuj ponownie.');
-                    // Скрываем модальное окно Fondy в случае ошибки
-                    const fondyContainer = document.getElementById('fondy-checkout-container');
-                    if (fondyContainer) {
-                        fondyContainer.style.display = 'none';
-                        document.body.classList.remove('modal-open');
-                    }
+                const fondyContainer = document.getElementById('fondy-checkout-container');
+                if (fondyContainer) {
+                    fondyContainer.style.display = 'flex';
+                    document.body.classList.add('modal-open');
                 }
 
-            } else {
-                // --- ОПЛАТА ПРИ ПОЛУЧЕНИИ ИЛИ В МАГАЗИНЕ ---
-                console.log(`Order placed with ${paymentMethod} payment.`);
-                // В реальном приложении здесь может быть отправка заказа на сервер
+                const closeButton = fondyContainer.querySelector('.fondy-close-button');
+                if (closeButton) {
+                    closeButton.addEventListener('click', function() {
+                        fondyContainer.style.display = 'none';
+                        document.body.classList.remove('modal-open');
+                        const fondyInner = fondyContainer.querySelector('#fondy-form-inner');
+                        if (fondyInner) {
+                            fondyInner.innerHTML = '';
+                        }
+                    });
+                }
 
-                // Перенаправляем на страницу подтверждения заказа
-                window.location.href = `order-confirmation.html?orderId=${orderId}&paymentMethod=${paymentMethod}`; // Передаем метод оплаты в URL
-
+            } catch (error) {
+                console.error('Error during Fondy payment initialization:', error);
+                alert('Wystąpił błąd podczas inicjowania płatności. Spróbuj ponownie.');
+                const fondyContainer = document.getElementById('fondy-checkout-container');
+                if (fondyContainer) {
+                    fondyContainer.style.display = 'none';
+                    document.body.classList.remove('modal-open');
+                }
             }
 
-            return false; // Останавливаем стандартную отправку формы
+            return false;
         }
 
-        // Инициализация при загрузке страницы
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Page loaded, initializing...');
             try {
