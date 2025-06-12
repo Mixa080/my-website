@@ -3,12 +3,12 @@ Strona główna sklepu rowerowego.
 Zawiera katalog produktów, promocje i główne funkcje sklepu.
 -->
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" data-theme="light">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TSWOZ - Sklep Rowerowy</title>
+    <title>BikeZone - Sklep Rowerowy</title>
     <link rel="stylesheet" href="1.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="components/loader.js" defer></script>
@@ -18,6 +18,18 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
             console.log('DOM loaded');
             console.log('Header placeholder exists:', !!document.getElementById('header-placeholder'));
             console.log('Footer placeholder exists:', !!document.getElementById('footer-placeholder'));
+        });
+
+        // Theme handling
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
+
+        // Initialize theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            setTheme(savedTheme);
         });
     </script>
 </head>
@@ -82,37 +94,45 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
             <div class="product-grid">
                 <div class="product-card">
                     <div class="product-badge">Promocja</div>
-                    <img src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60" alt="Rower górski">
-                    <h3>Rower górski TSWOZ Pro 29"</h3>
-                    <div class="price">
-                        <span class="old-price">4 999 zł</span>
-                        <span class="current-price">3 799 zł</span>
-                    </div>
+                    <a href="bike.html?id=1" class="product-link">
+                        <img src="https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?w=800&auto=format&fit=crop&q=60" alt="Rower górski">
+                        <h3>Rower górski TSWOZ Pro 29"</h3>
+                        <div class="price">
+                            <span class="old-price">4 999 zł</span>
+                            <span class="current-price">3 799 zł</span>
+                        </div>
+                    </a>
                     <a href="#" class="btn">Dodaj do koszyka</a>
                 </div>
                 <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60" alt="Rower miejski">
-                    <h3>Rower miejski TSWOZ City</h3>
-                    <div class="price">
-                        <span class="current-price">2 499 zł</span>
-                    </div>
+                    <a href="bike.html?id=2" class="product-link">
+                        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60" alt="Rower miejski">
+                        <h3>Rower miejski TSWOZ City</h3>
+                        <div class="price">
+                            <span class="current-price">2 499 zł</span>
+                        </div>
+                    </a>
                     <a href="#" class="btn">Dodaj do koszyka</a>
                 </div>
                 <div class="product-card">
-                    <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60" alt="Rower szosowy">
-                    <h3>Rower szosowy TSWOZ Speed</h3>
-                    <div class="price">
-                        <span class="current-price">5 299 zł</span>
-                    </div>
+                    <a href="bike.html?id=3" class="product-link">
+                        <img src="https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=800&auto=format&fit=crop&q=60" alt="Rower szosowy">
+                        <h3>Rower szosowy TSWOZ Speed</h3>
+                        <div class="price">
+                            <span class="current-price">5 299 zł</span>
+                        </div>
+                    </a>
                     <a href="#" class="btn">Dodaj do koszyka</a>
                 </div>
                 <div class="product-card">
                     <div class="product-badge">Nowość</div>
-                    <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60" alt="Kask rowerowy">
-                    <h3>Kask rowerowy TSWOZ Air</h3>
-                    <div class="price">
-                        <span class="current-price">199 zł</span>
-                    </div>
+                    <a href="bike.html?id=4" class="product-link">
+                        <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60" alt="Kask rowerowy">
+                        <h3>Kask rowerowy TSWOZ Air</h3>
+                        <div class="price">
+                            <span class="current-price">199 zł</span>
+                        </div>
+                    </a>
                     <a href="#" class="btn">Dodaj do koszyka</a>
                 </div>
             </div>

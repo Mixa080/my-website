@@ -1,4 +1,14 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Theme handling - moved from index.html
+    function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+    }
+
+    // Initialize theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+
     // Load header
     fetch('./components/header.html')
         .then(response => {
