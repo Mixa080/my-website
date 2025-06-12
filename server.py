@@ -31,15 +31,16 @@ class RequestHandler(BaseHTTPRequestHandler):
         try:
             print(f"Received request for path: {self.path}")  # Логируем входящий путь
             # Убираем query string
-            filepath = self.path.split('?', 1)[0][1:]
-            print(f"Looking for file: {filepath}")  # Логируем путь к файлу
+            requested_path = self.path.split('?', 1)[0]
+
+            # Ensure the path is relative and clean
+            if requested_path.startswith('/'):
+                requested_path = requested_path[1:]
             
-            # Проверяем существование файла
-            if not os.path.exists(filepath):
-                print(f"File not found: {filepath}")
-                self.send_error(404, f"File not found: {filepath}")
-                return
-                
+            # Construct the full path to the file
+            filepath = os.path.join(os.getcwd(), requested_path)
+            print(f"Attempting to serve file from absolute path: {filepath}")  # Логируем полный путь
+            
             # Получаем расширение файла
             file_extension = os.path.splitext(filepath)[1]
             print(f"File extension: {file_extension}")  # Логируем расширение
@@ -79,6 +80,45 @@ class RequestHandler(BaseHTTPRequestHandler):
         # Читаем тело запроса
         post_data = self.rfile.read(content_length)
         print(f"Received POST data on {self.path}: {post_data.decode('utf-8')}") # Логируем полученные данные
+
+        # Убираем query string для обработки статических файлов
+        requested_path = self.path.split('?', 1)[0]
+
+        # Ensure the path is relative and clean
+        if requested_path.startswith('/'):
+            requested_path = requested_path[1:]
+
+        # Проверяем, является ли запрос для статического файла (например, HTML-страницы)
+        if requested_path.endswith('.html') or requested_path.endswith('.css') or requested_path.endswith('.js'):
+            filepath = os.path.join(os.getcwd(), requested_path)
+            if os.path.exists(filepath):
+                try:
+                    file_extension = os.path.splitext(filepath)[1]
+                    content_types = {
+                        '.html': 'text/html',
+                        '.css': 'text/css',
+                        '.js': 'application/javascript',
+                        '.jpg': 'image/jpeg',
+                        '.jpeg': 'image/jpeg',
+                        '.png': 'image/png',
+                        '.gif': 'image/gif',
+                        '.ico': 'image/x-icon',
+                        '.json': 'application/json'
+                    }
+                    content_type = content_types.get(file_extension, 'application/octet-stream')
+
+                    with open(filepath, 'rb') as file:
+                        self.send_response(200)
+                        self.send_header('Content-type', content_type)
+                        self.send_header('Access-Control-Allow-Origin', '*')
+                        self.end_headers()
+                        self.wfile.write(file.read())
+                        print(f"Successfully served static file via POST: {filepath}")
+                        return
+                except Exception as e:
+                    print(f"Error serving static file via POST: {str(e)}")
+                    self.send_error(500, str(e))
+                    return
 
         # Обрабатываем разные эндпоинты
         if self.path == '/register':

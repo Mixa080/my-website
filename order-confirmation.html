@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potwierdzenie zamówienia - TSWOZ</title>
+    <link rel="stylesheet" href="1.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .confirmation-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .success-icon {
+            color: #2ecc71;
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .confirmation-header {
+            margin-bottom: 30px;
+        }
+        
+        .confirmation-header h1 {
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+        
+        .receipt {
+            background: #f8f8f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            text-align: left;
+        }
+        
+        .receipt-header {
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .receipt-items {
+            margin: 20px 0;
+        }
+        
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .receipt-total {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #ddd;
+            font-weight: bold;
+            font-size: 1.2em;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .redirect-message {
+            margin-top: 20px;
+            color: #666;
+        }
+        
+        .countdown {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        
+        .btn-print {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 20px;
+        }
+        
+        .btn-print:hover {
+            background: #c0392b;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main class="container">
+        <div class="confirmation-container">
+            <i class="fas fa-check-circle success-icon"></i>
+            <div class="confirmation-header">
+                <h1>Zamówienie potwierdzone!</h1>
+                <p>Dziękujemy za zakupy w TSWOZ</p>
+            </div>
+
+            <div class="receipt" id="receipt">
+                <div class="receipt-header">
+                    <h2>Paragon</h2>
+                    <p>Data: <span id="receipt-date"></span></p>
+                    <p>Numer zamówienia: <span id="order-number"></span></p>
+                </div>
+
+                <div class="receipt-items" id="receipt-items">
+                    <!-- Items will be added here -->
+                </div>
+
+                <div class="receipt-total">
+                    <span>Razem:</span>
+                    <span id="total-amount"></span>
+                </div>
+            </div>
+
+            <button class="btn-print" onclick="window.print()">
+                <i class="fas fa-print"></i> Drukuj paragon
+            </button>
+
+            <button class="btn-print" onclick="redirectToHome()" style="margin-top: 10px;">
+                <i class="fas fa-home"></i> Przejdź do strony głównej
+            </button>
+
+            <div class="redirect-message">
+                <p>Za <span class="countdown" id="countdown">10</span> sekund zostaniesz przekierowany do strony głównej...</p>
+            </div>
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        // Get order ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderId = urlParams.get('orderId');
+
+        // Load order details from localStorage
+        function loadOrderDetails() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = orders.find(o => o.id === orderId);
+
+            if (order) {
+                // Set receipt date
+                document.getElementById('receipt-date').textContent = new Date().toLocaleDateString();
+                document.getElementById('order-number').textContent = order.id;
+                document.getElementById('total-amount').textContent = order.total + ' zł';
+
+                // Add items to receipt
+                const itemsContainer = document.getElementById('receipt-items');
+                itemsContainer.innerHTML = order.items.map(item => `
+                    <div class="receipt-item">
+                        <span>${item.name} x ${item.quantity}</span>
+                        <span>${(item.price * item.quantity).toFixed(2)} zł</span>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Countdown timer
+        let seconds = 10;
+        const countdownElement = document.getElementById('countdown');
+
+        function updateCountdown() {
+            countdownElement.textContent = seconds;
+            if (seconds > 0) {
+                seconds--;
+                setTimeout(updateCountdown, 1000);
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+
+        function redirectToHome() {
+            window.location.href = 'index.html';
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrderDetails();
+            updateCountdown();
+        });
+    </script>
+</body>
+
+</html>

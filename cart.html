@@ -623,7 +623,7 @@
                         <h4>${point.name}</h4>
                         <p>${point.address}</p>
                         <p>${point.hours}</p>
-                        <button onclick="selectPickupPoint(${point.id})}" class="btn-select-point">
+                        <button onclick="selectPickupPoint(${point.id})" class="btn-select-point">
                             Wybierz ten punkt
                         </button>
                     `;
@@ -663,7 +663,7 @@
             const pointsList = document.getElementById('pickup-points-list');
             pointsList.innerHTML = pickupPoints.map(p => `
                 <div class="pickup-point ${selectedPoint && p.id === selectedPoint.id ? 'selected' : ''}" 
-                     onclick="selectPickupPoint(${p.id})}">
+                     onclick="selectPickupPoint(${p.id})">
                     <h4>${p.name}</h4>
                     <p>${p.address}</p>
                     <p>${p.hours}</p>
@@ -862,7 +862,14 @@
                 localStorage.setItem('orders', JSON.stringify(orders));
                 localStorage.removeItem('cart');
 
-                fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
+                // Initialize Fondy with proper error handling
+                try {
+                    fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
+                } catch (fondyError) {
+                    console.error('Fondy initialization error:', fondyError);
+                    alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
+                    return;
+                }
 
                 const fondyContainer = document.getElementById('fondy-checkout-container');
                 if (fondyContainer) {
@@ -870,26 +877,45 @@
                     document.body.classList.add('modal-open');
                 }
 
-                const closeButton = fondyContainer.querySelector('.fondy-close-button');
-                if (closeButton) {
-                    closeButton.addEventListener('click', function() {
-                        fondyContainer.style.display = 'none';
-                        document.body.classList.remove('modal-open');
-                        const fondyInner = fondyContainer.querySelector('#fondy-form-inner');
-                        if (fondyInner) {
-                            fondyInner.innerHTML = '';
+                // Add Fondy callback handler
+                window.addEventListener('fondyCallback', function(event) {
+                    console.log('Fondy callback received:', event.detail);
+
+                    if (event.detail.status === 'success') {
+                        // Close Fondy container
+                        const fondyContainer = document.getElementById('fondy-checkout-container');
+                        if (fondyContainer) {
+                            fondyContainer.style.display = 'none';
+                            document.body.classList.remove('modal-open');
                         }
-                    });
-                }
+
+                        // Update order status
+                        updateOrderStatusInLocalStorage('completed');
+
+                        // Redirect to main page
+                        window.location.href = 'index.html';
+                    } else if (event.detail.status === 'error') {
+                        console.error('Fondy payment error:', event.detail);
+                        alert('Wystąpił błąd podczas płatności. Spróbuj ponownie.');
+
+                        // Close Fondy container
+                        const fondyContainer = document.getElementById('fondy-checkout-container');
+                        if (fondyContainer) {
+                            fondyContainer.style.display = 'none';
+                            document.body.classList.remove('modal-open');
+                        }
+                    }
+                });
+
+                // Add error handler for 3DS redirect
+                window.addEventListener('fondy3dsRedirect', function(event) {
+                    console.log('3DS redirect detected:', event.detail);
+                    // Handle 3DS redirect if needed
+                });
 
             } catch (error) {
                 console.error('Error during Fondy payment initialization:', error);
-                alert('Wystąpił błąd podczas inicjowania płatności. Spróbuj ponownie.');
-                const fondyContainer = document.getElementById('fondy-checkout-container');
-                if (fondyContainer) {
-                    fondyContainer.style.display = 'none';
-                    document.body.classList.remove('modal-open');
-                }
+                alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
             }
 
             return false;
