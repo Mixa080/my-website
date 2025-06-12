@@ -386,499 +386,196 @@
     <div id="footer-placeholder"></div>
 
     <script>
-        let cart = [];
-        let selectedPoint = null;
-        let map = null;
-        let markers = [];
-
-        function loadCart() {
-            try {
-                const savedCart = localStorage.getItem('cart');
-                cart = savedCart ? JSON.parse(savedCart) : [];
-                console.log('Cart loaded:', cart);
-            } catch (error) {
-                console.error('Error loading cart:', error);
-                cart = [];
-            }
-        }
-
-        function updateCart() {
-            console.log('Updating cart display...');
-
-            const cartItems = document.getElementById('cart-items');
-            const cartTotal = document.getElementById('cart-total');
-            const subtotal = document.getElementById('subtotal');
-            const total = document.getElementById('total');
-            const emptyCart = document.getElementById('empty-cart');
-            const cartContent = document.getElementById('cart-content');
-
-            if (!cartItems || !cartTotal || !subtotal || !total || !emptyCart || !cartContent) {
-                console.error('Required elements not found:', {
-                    cartItems: !!cartItems,
-                    cartTotal: !!cartTotal,
-                    subtotal: !!subtotal,
-                    total: !!total,
-                    emptyCart: !!emptyCart,
-                    cartContent: !!cartContent
-                });
-                return;
-            }
-
-            if (cart.length === 0) {
-                emptyCart.style.display = 'block';
-                cartContent.style.display = 'none';
-                return;
-            }
-
-            emptyCart.style.display = 'none';
-            cartContent.style.display = 'block';
-            cartItems.innerHTML = '';
-            let totalAmount = 0;
-
-            cart.forEach((item, index) => {
-                const price = parseFloat(item.price);
-                const itemTotal = price * item.quantity;
-                totalAmount += itemTotal;
-
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>
-                        <div class="cart-item">
-                            <img src="${item.img}" alt="${item.name}" class="cart-item-img">
-                            <span>${item.name}</span>
-                        </div>
-                    </td>
-                    <td>${price.toFixed(2)} zł</td>
-                    <td>
-                        <div class="quantity-controls">
-                            <button type="button" onclick="updateQuantity(${index}, -1)">-</button>
-                            <span>${item.quantity}</span>
-                            <button type="button" onclick="updateQuantity(${index}, 1)">+</button>
-                        </div>
-                    </td>
-                    <td>${itemTotal.toFixed(2)} zł</td>
-                    <td>
-                        <button type="button" onclick="removeItem(${index})" class="remove-btn">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </td>
-                `;
-                cartItems.appendChild(tr);
-            });
-
-            cartTotal.textContent = totalAmount.toFixed(2) + ' zł';
-            subtotal.textContent = totalAmount.toFixed(2) + ' zł';
-            total.textContent = totalAmount.toFixed(2) + ' zł';
-
-            console.log('Cart display updated successfully');
-        }
-
-        function updateQuantity(index, change) {
-            if (cart[index].quantity + change > 0) {
-                cart[index].quantity += change;
-                localStorage.setItem('cart', JSON.stringify(cart));
-                updateCart();
-            }
-        }
-
-        function removeItem(index) {
-            cart.splice(index, 1);
-            localStorage.setItem('cart', JSON.stringify(cart));
-            updateCart();
-        }
-
-        const pickupPoints = [{
-            id: 1,
-            name: 'Punkt odbioru Warszawa Centrum',
-            address: 'ul. Marszałkowska 1, Warszawa',
-            hours: 'Pon-Pt: 9:00-20:00, Sob: 10:00-18:00',
-            position: [52.2297, 21.0122]
-        }, {
-            id: 2,
-            name: 'Punkt odbioru Warszawa Wola',
-            address: 'ul. Górczewska 15, Warszawa',
-            hours: 'Pon-Pt: 8:00-19:00, Sob: 9:00-17:00',
-            position: [52.2397, 21.0222]
-        }, {
-            id: 3,
-            name: 'Punkt odbioru Warszawa Mokotów',
-            address: 'ul. Puławska 30, Warszawa',
-            hours: 'Pon-Pt: 9:00-20:00, Sob: 10:00-18:00',
-            position: [52.2197, 21.0022]
-        }, {
-            id: 4,
-            name: 'Punkt odbioru Warszawa Praga',
-            address: 'ul. Targowa 25, Warszawa',
-            hours: 'Pon-Pt: 8:00-19:00, Sob: 9:00-17:00',
-            position: [52.2497, 21.0322]
-        }, {
-            id: 5,
-            name: 'Punkt odbioru Łódź Centrum',
-            address: 'ul. Piotrkowska 104, Łódź',
-            hours: 'Pon-Pt: 9:00-20:00, Sob: 10:00-18:00',
-            position: [51.7592, 19.4559]
-        }, {
-            id: 6,
-            name: 'Punkt odbioru Łódź Bałuty',
-            address: 'ul. Zgierska 21, Łódź',
-            hours: 'Pon-Pt: 8:00-19:00, Sob: 9:00-17:00',
-            position: [51.7833, 19.4667]
-        }];
-
-        function initMap() {
-            console.log('initMap called.');
-
-            if (typeof L === 'undefined') {
-                console.error('Leaflet library not loaded. Cannot initialize map.');
-                return;
-            }
-            console.log('Leaflet library detected.');
-
-            if (map) {
-                console.log('Removing existing map instance.');
-                map.remove();
-                map = null;
-                markers = [];
-            }
-
-            try {
-                const mapElement = document.getElementById('map');
-                if (!mapElement) {
-                    console.error('Map element #map not found in the DOM.');
-                    return;
-                }
-                console.log('Map element #map found.', mapElement);
-
-                const mapContainer = document.getElementById('map-container');
-                if (mapContainer && mapContainer.style.display === 'none') {
-                    console.warn('Map container is hidden. Delaying map initialization.');
-                    setTimeout(initMap, 500);
-                    return;
-                }
-                console.log('Map container is visible or not found (proceeding).');
-
-
-                map = L.map('map', {
-                    center: [52.2297, 21.0122],
-                    zoom: 6,
-                    zoomControl: true
-                });
-                console.log('L.map initialized.');
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                const cartTable = document.getElementById('cart-table');
+                const cartBody = document.getElementById('cart-body');
+                const totalElement = document.getElementById('total');
+                const subtotalElement = document.getElementById('subtotal');
+                const deliveryCostElement = document.getElementById('delivery-cost');
+                const deliveryOptions = document.querySelectorAll('.delivery-option input');
+                const deliveryDetails = document.getElementById('delivery-details');
+                const pickupPoints = document.getElementById('pickup-points');
+                const map = L.map('map').setView([52.2297, 21.0122], 13);
+                const selectedPoint = document.getElementById('selected-point');
+                const btnSelectPoint = document.getElementById('btn-select-point');
+                const btnCheckout = document.getElementById('btn-checkout');
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-                    maxZoom: 19
+                    attribution: '© OpenStreetMap contributors'
                 }).addTo(map);
-                console.log('Tile layer added.');
 
-                markers = [];
-                pickupPoints.forEach(point => {
-                    const marker = L.marker(point.position).addTo(map);
-                    const popupContent = document.createElement('div');
-                    popupContent.className = 'map-popup';
-                    popupContent.innerHTML = `
+                const points = [{
+                    id: 1,
+                    name: 'Punkt odbioru Warszawa Centrum',
+                    address: 'ul. Marszałkowska 1, Warszawa',
+                    lat: 52.2297,
+                    lng: 21.0122
+                }, {
+                    id: 2,
+                    name: 'Punkt odbioru Warszawa Wola',
+                    address: 'ul. Wolska 2, Warszawa',
+                    lat: 52.2337,
+                    lng: 20.9762
+                }, {
+                    id: 3,
+                    name: 'Punkt odbioru Warszawa Mokotów',
+                    address: 'ul. Mokotowska 3, Warszawa',
+                    lat: 52.2197,
+                    lng: 21.0222
+                }];
+
+                points.forEach(point => {
+                    const marker = L.marker([point.lat, point.lng]).addTo(map);
+                    marker.bindPopup(`<b>${point.name}</b><br>${point.address}`);
+                });
+
+                function updateCart() {
+                    cartBody.innerHTML = '';
+                    let total = 0;
+
+                    cart.forEach((item, index) => {
+                        const price = parseFloat(item.price);
+                        const quantity = parseInt(item.quantity);
+                        const itemTotal = price * quantity;
+                        total += itemTotal;
+
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>
+                                <div class="cart-item">
+                                    <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+                                    <span>${item.name}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="quantity-controls">
+                                    <button onclick="updateQuantity(${index}, -1)">-</button>
+                                    <span>${item.quantity}</span>
+                                    <button onclick="updateQuantity(${index}, 1)">+</button>
+                                </div>
+                            </td>
+                            <td>${price.toFixed(2)} zł</td>
+                            <td>${itemTotal.toFixed(2)} zł</td>
+                            <td>
+                                <button class="remove-btn" onclick="removeItem(${index})">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </td>
+                        `;
+                        cartBody.appendChild(row);
+                    });
+
+                    subtotalElement.textContent = total.toFixed(2) + ' zł';
+                    updateTotal();
+                }
+
+                function updateTotal() {
+                    const subtotal = parseFloat(subtotalElement.textContent);
+                    const deliveryCost = parseFloat(deliveryCostElement.textContent);
+                    const total = subtotal + deliveryCost;
+                    totalElement.textContent = total.toFixed(2) + ' zł';
+                }
+
+                function updateQuantity(index, change) {
+                    const newQuantity = cart[index].quantity + change;
+                    if (newQuantity > 0) {
+                        cart[index].quantity = newQuantity;
+                        localStorage.setItem('cart', JSON.stringify(cart));
+                        updateCart();
+                    }
+                }
+
+                function removeItem(index) {
+                    cart.splice(index, 1);
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    updateCart();
+                }
+
+                deliveryOptions.forEach(option => {
+                    option.addEventListener('change', function() {
+                        if (this.value === 'pickup') {
+                            deliveryDetails.style.display = 'none';
+                            pickupPoints.style.display = 'block';
+                            deliveryCostElement.textContent = '0.00 zł';
+                        } else {
+                            deliveryDetails.style.display = 'block';
+                            pickupPoints.style.display = 'none';
+                            deliveryCostElement.textContent = '15.00 zł';
+                        }
+                        updateTotal();
+                    });
+                });
+
+                const pickupPointsList = document.getElementById('pickup-points-list');
+                points.forEach(point => {
+                    const pointElement = document.createElement('div');
+                    pointElement.className = 'pickup-point';
+                    pointElement.innerHTML = `
                         <h4>${point.name}</h4>
                         <p>${point.address}</p>
-                        <p>${point.hours}</p>
-                        <button onclick="selectPickupPoint(${point.id})" class="btn-select-point">
-                            Wybierz ten punkt
-                        </button>
                     `;
-                    marker.bindPopup(popupContent);
-                    markers.push(marker);
-                    console.log(`Marker added for ${point.name}`);
-                });
-                console.log(`Added ${markers.length} markers.`);
-
-                if (pickupPoints.length > 0) {
-                    const bounds = L.latLngBounds(pickupPoints.map(point => point.position));
-                    map.fitBounds(bounds, {
-                        padding: [50, 50]
+                    pointElement.addEventListener('click', () => {
+                        document.querySelectorAll('.pickup-point').forEach(p => p.classList.remove('selected'));
+                        pointElement.classList.add('selected');
+                        selectedPoint.textContent = point.name;
+                        btnSelectPoint.disabled = false;
                     });
-                    console.log('Map bounds fitted to points.');
-                } else {
-                    console.warn('No pickup points available to fit bounds.');
-                }
+                    pickupPointsList.appendChild(pointElement);
+                });
 
-                setTimeout(() => {
-                    if (map) {
-                        map.invalidateSize();
-                        console.log('map.invalidateSize() called.');
-                    }
-                }, 100);
-
-                updatePickupPointsList();
-                console.log('Pickup points list updated.');
-
-                console.log('Map initialization complete.');
-            } catch (error) {
-                console.error('Error during map initialization:', error);
-            }
-        }
-
-        function updatePickupPointsList() {
-            const pointsList = document.getElementById('pickup-points-list');
-            pointsList.innerHTML = pickupPoints.map(p => `
-                <div class="pickup-point ${selectedPoint && p.id === selectedPoint.id ? 'selected' : ''}" 
-                     onclick="selectPickupPoint(${p.id})">
-                    <h4>${p.name}</h4>
-                    <p>${p.address}</p>
-                    <p>${p.hours}</p>
-                </div>
-            `).join('');
-        }
-
-        function selectPickupPoint(pointId) {
-            console.log('Selecting point:', pointId);
-            const point = pickupPoints.find(p => p.id === pointId);
-            if (!point) {
-                console.error('Point not found:', pointId);
-                return;
-            }
-
-            selectedPoint = point;
-            console.log('Selected point:', selectedPoint);
-
-            updatePickupPointsList();
-
-            const infoContainer = document.getElementById('selected-point-info');
-            document.getElementById('selected-point-name').textContent = point.name;
-            document.getElementById('selected-point-address').textContent = point.address;
-            document.getElementById('selected-point-hours').textContent = point.hours;
-            infoContainer.style.display = 'block';
-
-            if (map) {
-                map.setView(point.position, 14);
-                markers.forEach((marker, index) => {
-                    if (pickupPoints[index].id === pointId) {
-                        marker.openPopup();
+                btnSelectPoint.addEventListener('click', () => {
+                    const selectedPointElement = document.querySelector('.pickup-point.selected');
+                    if (selectedPointElement) {
+                        pickupPoints.style.display = 'none';
+                        deliveryDetails.style.display = 'block';
+                        document.querySelector('input[value="pickup"]').checked = true;
                     }
                 });
-            }
-        }
 
-        document.querySelectorAll('input[name="delivery"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                console.log('Delivery method changed:', this.value);
-                const mapContainer = document.getElementById('map-container');
-                const addressForm = document.querySelector('.delivery-details:not(#map-container)');
-                const submitButton = document.getElementById('submit-order');
-
-                if (this.value === 'pickup') {
-                    console.log('Showing map container, hiding address form.');
-                    mapContainer.style.display = 'block';
-                    addressForm.style.display = 'none';
-                    submitButton.disabled = false;
-
-                    document.getElementById('address').removeAttribute('required');
-                    document.getElementById('city').removeAttribute('required');
-                    document.getElementById('postal-code').removeAttribute('required');
-
-                    setTimeout(() => {
-                        initMap();
-                    }, 500);
-                } else {
-                    console.log('Showing address form, hiding map container.');
-                    mapContainer.style.display = 'none';
-                    addressForm.style.display = 'block';
-                    submitButton.disabled = false;
-
-                    document.getElementById('address').setAttribute('required', 'required');
-                    document.getElementById('city').setAttribute('required', 'required');
-                    document.getElementById('postal-code').removeAttribute('required');
-
-                    if (map) {
-                        console.log('Removing map on courier selection.');
-                        map.remove();
-                        map = null;
-                        markers = [];
+                btnCheckout.addEventListener('click', function() {
+                    const deliveryMethod = document.querySelector('input[name="delivery"]:checked');
+                    if (!deliveryMethod) {
+                        alert('Wybierz metodę dostawy');
+                        return;
                     }
-                    document.getElementById('selected-point-info').style.display = 'none';
-                    selectedPoint = null;
-                }
-            });
-        });
 
-        window.addEventListener('resize', function() {
-            console.log('Window resized, invalidating map size.');
-            if (map) {
-                map.invalidateSize();
-            }
-        });
-
-        async function handleOrderSubmit(event) {
-            event.preventDefault();
-            console.log('Form submission started');
-
-            const deliveryMethod = document.querySelector('input[name="delivery"]:checked').value;
-            console.log('Delivery method:', deliveryMethod);
-
-            if (deliveryMethod === 'courier') {
-                const address = document.getElementById('address').value;
-                const city = document.getElementById('city').value;
-
-                if (!address || !city) {
-                    alert('Wypełnij wymagane pola adresowe: Adres dostawy i Miasto.');
-                    return false;
-                }
-            }
-
-            const total = document.getElementById('total').textContent;
-            const totalValue = parseFloat(total.replace(' zł', ''));
-            const orderId = 'ORD-' + Date.now();
-
-            const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
-
-            const fondyPaymentParams = {
-                merchant_id: 1396424,
-                order_id: orderId,
-                order_desc: 'Zakup w sklepie TSWOZ',
-                amount: Math.round(totalValue * 100),
-                currency: 'PLN',
-                server_callback_url: `${window.location.origin}/payment-callback.html`,
-                response_url: `${window.location.origin}/order-confirmation.html?orderId=${orderId}`,
-                lang: 'pl',
-                sender_email: 'customer@example.com',
-                product_id: cartItems.map(item => item.id).join(','),
-                required_rectoken: 'N',
-                payment_systems: 'card,p24,googlePay,applePay',
-                show_saved_cards: 'Y',
-                lifetime: 3600,
-                preauth: 'N',
-                verification: 'N',
-                verification_type: 'code',
-                rectoken: 'N',
-                design_id: '1',
-                delivery: deliveryMethod === 'courier' ?
-                    `${document.getElementById('address').value}, ${document.getElementById('city').value}` : selectedPoint ? `${selectedPoint.name}, ${selectedPoint.address}` : '',
-                items: cartItems.map(item => ({
-                    name: item.name,
-                    amount: Math.round(parseFloat(item.price) * 100),
-                    quantity: item.quantity,
-                    image: item.img
-                }))
-            };
-
-            const fondyOptions = {
-                options: {
-                    full_screen: true,
-                    button: true,
-                    methods: ['card', 'banklinks_eu', 'wallets', 'local_methods'],
-                    card_icons: ['mastercard', 'visa', 'maestro'],
-                    default_country: 'PL',
-                    countries: ["PL"],
-                    locales: ['pl', 'en'],
-                    email: true,
-                    theme: {
-                        type: "light",
-                        preset: "navy_shimmer"
+                    if (deliveryMethod.value === 'pickup' && !selectedPoint.textContent) {
+                        alert('Wybierz punkt odbioru');
+                        return;
                     }
-                },
-                params: fondyPaymentParams,
-                messages: {
-                    pl: {
-                        card_number: 'Numer karty',
-                        my_title: 'Cel płatności',
-                        my_order_desc: 'Płatność testowa'
-                    },
 
-                }
-            };
-
-            try {
-                const order = {
-                    id: orderId,
-                    date: new Date().toLocaleDateString(),
-                    status: 'processing',
-                    total: totalValue,
-                    items: cartItems,
-                    shipping: {
-                        method: deliveryMethod,
-                        ...(deliveryMethod === 'courier' ? {
-                            address: document.getElementById('address').value,
-                            city: document.getElementById('city').value,
-                            postalCode: document.getElementById('postal-code').value
-                        } : {
-                            pickupPoint: selectedPoint
-                        })
-                    },
-                    payment: {
-                        method: 'card',
-                        status: 'pending',
-                        paymentId: orderId
-                    }
-                };
-
-                console.log('Saving order before Fondy init:', order);
-                const orders = JSON.parse(localStorage.getItem('orders')) || [];
-                orders.push(order);
-                localStorage.setItem('orders', JSON.stringify(orders));
-                localStorage.removeItem('cart');
-
-                try {
-                    fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
-                } catch (fondyError) {
-                    console.error('Fondy initialization error:', fondyError);
-                    alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
-                    return;
-                }
-
-                const fondyContainer = document.getElementById('fondy-checkout-container');
-                if (fondyContainer) {
-                    fondyContainer.style.display = 'flex';
-                    document.body.classList.add('modal-open');
-                }
-
-                window.addEventListener('fondyCallback', function(event) {
-                    console.log('Fondy callback received:', event.detail);
-
-                    if (event.detail.status === 'success') {
-                        const fondyContainer = document.getElementById('fondy-checkout-container');
-                        if (fondyContainer) {
-                            fondyContainer.style.display = 'none';
-                            document.body.classList.remove('modal-open');
-                        }
-
-                        updateOrderStatusInLocalStorage('completed');
-
-                        window.location.href = 'index.html';
-                    } else if (event.detail.status === 'error') {
-                        console.error('Fondy payment error:', event.detail);
-                        alert('Wystąpił błąd podczas płatności. Spróbuj ponownie.');
-
-                        const fondyContainer = document.getElementById('fondy-checkout-container');
-                        if (fondyContainer) {
-                            fondyContainer.style.display = 'none';
-                            document.body.classList.remove('modal-open');
+                    if (deliveryMethod.value === 'delivery') {
+                        const address = document.getElementById('address').value;
+                        const city = document.getElementById('city').value;
+                        const postalCode = document.getElementById('postal-code').value;
+                        if (!address || !city || !postalCode) {
+                            alert('Wypełnij wszystkie pola adresu');
+                            return;
                         }
                     }
+
+                    const orderData = {
+                        items: cart,
+                        delivery: {
+                            method: deliveryMethod.value,
+                            address: deliveryMethod.value === 'delivery' ? {
+                                address: document.getElementById('address').value,
+                                city: document.getElementById('city').value,
+                                postalCode: document.getElementById('postal-code').value
+                            } : null,
+                            pickupPoint: deliveryMethod.value === 'pickup' ? selectedPoint.textContent : null
+                        },
+                        total: parseFloat(totalElement.textContent)
+                    };
+
+                    localStorage.setItem('currentOrder', JSON.stringify(orderData));
+                    window.location.href = 'order-confirmation.html';
                 });
 
-                window.addEventListener('fondy3dsRedirect', function(event) {
-                    console.log('3DS redirect detected:', event.detail);
-                });
-
-            } catch (error) {
-                console.error('Error during Fondy payment initialization:', error);
-                alert('Wystąpił błąd podczas inicjalizacji płatności. Spróbuj ponownie.');
-            }
-
-            return false;
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Page loaded, initializing...');
-            try {
-                loadCart();
                 updateCart();
-                const submitButton = document.getElementById('submit-order');
-                if (submitButton) {
-                    submitButton.disabled = false;
-                }
-                console.log('Initialization completed successfully');
-            } catch (error) {
-                console.error('Error during initialization:', error);
-            }
+            }, 100);
         });
     </script>
 </body>
