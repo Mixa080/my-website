@@ -70,13 +70,13 @@ header .container {
 
 .logo h1 {
     margin: 0;
-    color: #e74c3c;
+    color: var(--hover-color);
     font-size: 2em;
 }
 
 .logo p {
     margin: 0;
-    color: #666;
+    color: var(--text-color);
     font-size: 0.9em;
 }
 
