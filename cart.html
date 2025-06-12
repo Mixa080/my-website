@@ -571,7 +571,14 @@
                     };
 
                     localStorage.setItem('currentOrder', JSON.stringify(orderData));
-                    window.location.href = 'order-confirmation.html';
+
+                    const orderId = Date.now();
+                    const params = new URLSearchParams({
+                        orderId: orderId,
+                        status: 'success'
+                    });
+
+                    window.location.href = `order-confirmation.html?${params.toString()}`;
                 });
 
                 updateCart();

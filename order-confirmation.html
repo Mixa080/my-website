@@ -162,44 +162,40 @@
 
     <script>
         function saveOrderToHistory() {
-            const cart = JSON.parse(localStorage.getItem('cart')) || [];
-            if (cart.length === 0) return;
+            const orderData = JSON.parse(localStorage.getItem('currentOrder'));
+            if (!orderData) return;
 
             const orders = JSON.parse(localStorage.getItem('orders')) || [];
             const newOrder = {
-                id: Date.now(),
+                id: new URLSearchParams(window.location.search).get('orderId'),
                 date: new Date().toISOString(),
                 status: 'W trakcie realizacji',
-                items: cart.map(item => ({
-                    ...item,
-                    price: parseFloat(item.price),
-                    quantity: parseInt(item.quantity)
-                })),
-                total: cart.reduce((sum, item) => sum + (parseFloat(item.price) * parseInt(item.quantity)), 0)
+                items: orderData.items,
+                delivery: orderData.delivery,
+                total: orderData.total
             };
 
             orders.unshift(newOrder);
             localStorage.setItem('orders', JSON.stringify(orders));
             localStorage.removeItem('cart');
+            localStorage.removeItem('currentOrder');
         }
 
         function loadOrderDetails() {
-            const orders = JSON.parse(localStorage.getItem('orders')) || [];
-            const order = orders[0];
+            const orderData = JSON.parse(localStorage.getItem('currentOrder'));
+            if (!orderData) return;
 
-            if (order) {
-                document.getElementById('receipt-date').textContent = new Date().toLocaleDateString();
-                document.getElementById('order-number').textContent = order.id;
-                document.getElementById('total-amount').textContent = order.total.toFixed(2) + ' zł';
+            document.getElementById('receipt-date').textContent = new Date().toLocaleDateString();
+            document.getElementById('order-number').textContent = new URLSearchParams(window.location.search).get('orderId');
+            document.getElementById('total-amount').textContent = orderData.total.toFixed(2) + ' zł';
 
-                const itemsContainer = document.getElementById('receipt-items');
-                itemsContainer.innerHTML = order.items.map(item => `
-                    <div class="receipt-item">
-                        <span>${item.name} ${item.wheelSize ? `(${item.wheelSize})` : ''} ${item.frameSize ? `(${item.frameSize})` : ''} x ${item.quantity}</span>
-                        <span>${(item.price * item.quantity).toFixed(2)} zł</span>
-                    </div>
-                `).join('');
-            }
+            const itemsContainer = document.getElementById('receipt-items');
+            itemsContainer.innerHTML = orderData.items.map(item => `
+                <div class="receipt-item">
+                    <span>${item.name} ${item.wheelSize ? `(${item.wheelSize})` : ''} ${item.frameSize ? `(${item.frameSize})` : ''} x ${item.quantity}</span>
+                    <span>${(parseFloat(item.price) * parseInt(item.quantity)).toFixed(2)} zł</span>
+                </div>
+            `).join('');
         }
 
         function printReceipt() {
@@ -224,9 +220,14 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            saveOrderToHistory();
-            loadOrderDetails();
-            updateCountdown();
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('status') === 'success') {
+                saveOrderToHistory();
+                loadOrderDetails();
+                updateCountdown();
+            } else {
+                window.location.href = 'index.html';
+            }
         });
     </script>
 </body>
