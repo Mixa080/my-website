@@ -115,6 +115,37 @@
             background-color: #27ae60;
         }
         
+        .bike-options {
+            margin-bottom: 30px;
+        }
+        
+        .option-group {
+            margin-bottom: 15px;
+        }
+        
+        .option-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        
+        .option-select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: border-color 0.3s;
+        }
+        
+        .option-select:focus {
+            outline: none;
+            border-color: var(--hover-color);
+        }
+        
         @media (max-width: 768px) {
             .bike-container {
                 grid-template-columns: 1fr;
@@ -170,6 +201,26 @@
                         </tr>
                     </tbody>
                 </table>
+                <div class="bike-options">
+                    <div class="option-group">
+                        <label for="wheel-size">Rozmiar kół:</label>
+                        <select id="wheel-size" class="option-select">
+                            <option value="26">26"</option>
+                            <option value="27.5">27.5"</option>
+                            <option value="29">29"</option>
+                            <option value="700c">700c</option>
+                        </select>
+                    </div>
+                    <div class="option-group">
+                        <label for="frame-size">Rozmiar ramy:</label>
+                        <select id="frame-size" class="option-select">
+                            <option value="S">S (160-170 cm)</option>
+                            <option value="M">M (170-180 cm)</option>
+                            <option value="L">L (180-190 cm)</option>
+                            <option value="XL">XL (190+ cm)</option>
+                        </select>
+                    </div>
+                </div>
                 <button class="add-to-cart" onclick="addToCart()">Dodaj do koszyka</button>
             </div>
         </div>
@@ -232,6 +283,10 @@
                 .then(data => {
                     const bike = data.bikes.find(b => b.id === parseInt(bikeId));
                     if (bike) {
+                        // Pobierz wybrane opcje
+                        const wheelSize = document.getElementById('wheel-size').value;
+                        const frameSize = document.getElementById('frame-size').value;
+
                         // Pobierz aktualny koszyk
                         let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
@@ -241,14 +296,16 @@
                             name: bike.name,
                             price: bike.price,
                             img: bike.img,
-                            quantity: 1
+                            quantity: 1,
+                            wheelSize: wheelSize,
+                            frameSize: frameSize
                         });
 
                         // Zapisz koszyk
                         localStorage.setItem('cart', JSON.stringify(cart));
 
                         // Pokaż powiadomienie
-                        alert('Dodano do koszyka!');
+                        alert('Produkt dodany do koszyka!');
                     }
                 });
         }

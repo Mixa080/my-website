@@ -523,18 +523,6 @@
             address: 'ul. Zgierska 21, Łódź',
             hours: 'Pon-Pt: 8:00-19:00, Sob: 9:00-17:00',
             position: [51.7833, 19.4667]
-        }, {
-            id: 7,
-            name: 'Punkt odbioru Charków Centrum',
-            address: 'вул. Сумська 1, Харків',
-            hours: 'Пн-Пт: 9:00-20:00, Сб: 10:00-18:00',
-            position: [49.9935, 36.2304]
-        }, {
-            id: 8,
-            name: 'Punkt odbioru Charków Saltivka',
-            address: 'вул. Героїв Праці 7, Харків',
-            hours: 'Пн-Пт: 8:00-19:00, Сб: 9:00-17:00',
-            position: [50.0264, 36.3112]
         }];
 
         function initMap() {
@@ -746,7 +734,7 @@
                 order_id: orderId,
                 order_desc: 'Zakup w sklepie TSWOZ',
                 amount: Math.round(totalValue * 100),
-                currency: 'UAH',
+                currency: 'PLN',
                 server_callback_url: `${window.location.origin}/payment-callback.html`,
                 response_url: `${window.location.origin}/order-confirmation.html?orderId=${orderId}`,
                 lang: 'pl',
@@ -778,8 +766,8 @@
                     methods: ['card', 'banklinks_eu', 'wallets', 'local_methods'],
                     card_icons: ['mastercard', 'visa', 'maestro'],
                     default_country: 'PL',
-                    countries: ["PL", "UA"],
-                    locales: ['pl', 'uk', 'en'],
+                    countries: ["PL"],
+                    locales: ['pl', 'en'],
                     email: true,
                     theme: {
                         type: "light",
@@ -793,11 +781,7 @@
                         my_title: 'Cel płatności',
                         my_order_desc: 'Płatność testowa'
                     },
-                    uk: {
-                        card_number: 'Номер карти',
-                        my_title: 'Призначення платежу',
-                        my_order_desc: 'Тестова оплата'
-                    }
+
                 }
             };
 
@@ -831,7 +815,6 @@
                 localStorage.setItem('orders', JSON.stringify(orders));
                 localStorage.removeItem('cart');
 
-                // Initialize Fondy with proper error handling
                 try {
                     fondy('#fondy-checkout-container #fondy-form-inner', fondyOptions);
                 } catch (fondyError) {
@@ -846,28 +829,23 @@
                     document.body.classList.add('modal-open');
                 }
 
-                // Add Fondy callback handler
                 window.addEventListener('fondyCallback', function(event) {
                     console.log('Fondy callback received:', event.detail);
 
                     if (event.detail.status === 'success') {
-                        // Close Fondy container
                         const fondyContainer = document.getElementById('fondy-checkout-container');
                         if (fondyContainer) {
                             fondyContainer.style.display = 'none';
                             document.body.classList.remove('modal-open');
                         }
 
-                        // Update order status
                         updateOrderStatusInLocalStorage('completed');
 
-                        // Redirect to main page
                         window.location.href = 'index.html';
                     } else if (event.detail.status === 'error') {
                         console.error('Fondy payment error:', event.detail);
                         alert('Wystąpił błąd podczas płatności. Spróbuj ponownie.');
 
-                        // Close Fondy container
                         const fondyContainer = document.getElementById('fondy-checkout-container');
                         if (fondyContainer) {
                             fondyContainer.style.display = 'none';
@@ -876,10 +854,8 @@
                     }
                 });
 
-                // Add error handler for 3DS redirect
                 window.addEventListener('fondy3dsRedirect', function(event) {
                     console.log('3DS redirect detected:', event.detail);
-                    // Handle 3DS redirect if needed
                 });
 
             } catch (error) {

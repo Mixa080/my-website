@@ -75,6 +75,25 @@ Umożliwia utworzenie nowego konta w sklepie.
         .login-link a {
             color: #e74c3c;
         }
+        
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1em;
+            background-color: white;
+            color: #333;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        
+        select option {
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -103,8 +122,17 @@ Umożliwia utworzenie nowego konta w sklepie.
                     <input type="password" id="password" name="password" required>
                 </div>
                 <div class="form-group">
-                    <label for="confirm_password">Potwierdź hasło</label>
-                    <input type="password" id="confirm_password" name="confirm_password" required>
+                    <label for="experience">Poziom doświadczenia:</label>
+                    <select id="experience" name="experience" required>
+                        <option value="">Wybierz poziom</option>
+                        <option value="beginner">Początkujący</option>
+                        <option value="intermediate">Średniozaawansowany</option>
+                        <option value="professional">Profesjonalista</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Potwierdź hasło</label>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
                 </div>
                 <button type="submit" class="btn-register">Zarejestruj się</button>
             </form>
@@ -117,38 +145,34 @@ Umożliwia utworzenie nowego konta w sklepie.
     <div id="footer-placeholder"></div>
 
     <script>
-        document.getElementById('register-form').addEventListener('submit', async function(e) {
+        document.getElementById('register-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
-            const formData = {
-                name: document.getElementById('name').value,
-                email: document.getElementById('email').value,
-                password: document.getElementById('password').value
+            const formData = new FormData(this);
+            const userData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                password: formData.get('password'),
+                experience: formData.get('experience')
             };
 
-            try {
-                const response = await fetch('http://localhost:8000/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(formData)
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    // Сохраняем данные пользователя
-                    localStorage.setItem('user', JSON.stringify(data.user));
-                    // Перенаправляем на страницу аккаунта
-                    window.location.href = 'account.html';
-                } else {
-                    alert(data.error || 'Помилка реєстрації');
-                }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Помилка з\'єднання з сервером');
+            if (formData.get('password') !== formData.get('confirm-password')) {
+                alert('Hasła nie są identyczne!');
+                return;
             }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+
+            if (users.some(user => user.email === userData.email)) {
+                alert('Użytkownik z tym adresem email już istnieje!');
+                return;
+            }
+
+            users.push(userData);
+            localStorage.setItem('users', JSON.stringify(users));
+
+            alert('Rejestracja zakończona sukcesem!');
+            window.location.href = 'login.html';
         });
     </script>
 </body>

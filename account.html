@@ -371,22 +371,107 @@ Zawiera informacje o koncie, historię zamówień i ustawienia użytkownika.
     <div id="footer-placeholder"></div>
 
     <script>
-        // Show selected section
         function showSection(sectionId) {
-            // Hide all sections
             document.querySelectorAll('.account-section').forEach(section => {
                 section.classList.remove('active');
             });
 
-            // Show selected section
             document.getElementById(sectionId).classList.add('active');
 
-            // Update active link
             document.querySelectorAll('.account-sidebar a').forEach(link => {
                 link.classList.remove('active');
             });
-            document.querySelector(`.account-sidebar a[href="#${sectionId}"]`).classList.add('active');
+            document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+            if (sectionId === 'orders') {
+                displayOrders();
+            }
         }
+
+        function displayOrders() {
+            const orders = JSON.parse(localStorage.getItem('orders')) || [];
+            const ordersList = document.getElementById('orders-list');
+
+            if (orders.length === 0) {
+                ordersList.innerHTML = '<p class="no-orders">Nie masz jeszcze żadnych zamówień.</p>';
+                return;
+            }
+
+            ordersList.innerHTML = orders.map(order => `
+                <div class="order-item">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-number">Zamówienie #${order.id}</span>
+                            <span class="order-date">${new Date(order.date).toLocaleDateString()}</span>
+                        </div>
+                        <span class="order-status ${order.status.toLowerCase()}">${order.status}</span>
+                    </div>
+                    <div class="order-items">
+                        ${order.items.map(item => `
+                            <div class="order-item-row">
+                                <span>${item.name} ${item.wheelSize ? `(${item.wheelSize})` : ''} ${item.frameSize ? `(${item.frameSize})` : ''}</span>
+                                <span>${item.quantity} x ${item.price.toFixed(2)} zł</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-total">
+                        Razem: ${order.total.toFixed(2)} zł
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentSection = document.querySelector('.account-section.active');
+            if (currentSection && currentSection.id === 'orders') {
+                displayOrders();
+            }
+        });
+
+        document.getElementById('personal-info-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const userData = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone')
+            };
+            localStorage.setItem('userData', JSON.stringify(userData));
+            alert('Dane zostały zapisane!');
+        });
+
+        document.getElementById('address-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const addressData = {
+                street: formData.get('street'),
+                city: formData.get('city'),
+                postalCode: formData.get('postal-code'),
+                country: formData.get('country')
+            };
+            localStorage.setItem('addressData', JSON.stringify(addressData));
+            alert('Adres został zapisany!');
+        });
+
+        document.getElementById('password-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const currentPassword = formData.get('current-password');
+            const newPassword = formData.get('new-password');
+            const confirmPassword = formData.get('confirm-password');
+
+            if (newPassword !== confirmPassword) {
+                alert('Nowe hasła nie są identyczne!');
+                return;
+            }
+
+            alert('Hasło zostało zmienione!');
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            localStorage.removeItem('userData');
+            window.location.href = 'index.html';
+        });
 
         // Load user data
         async function loadUserData() {
