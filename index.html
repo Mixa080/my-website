@@ -1,7 +1,3 @@
-<!--
-Strona główna sklepu rowerowego.
-Zawiera katalog produktów, promocje i główne funkcje sklepu.
--->
 <!DOCTYPE html>
 <html lang="pl" data-theme="light">
 
@@ -13,24 +9,15 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="components/loader.js" defer></script>
     <script>
-        console.log('Main script loaded');
-        document.addEventListener('DOMContentLoaded', () => {
-            console.log('DOM loaded');
-            console.log('Header placeholder exists:', !!document.getElementById('header-placeholder'));
-            console.log('Footer placeholder exists:', !!document.getElementById('footer-placeholder'));
-        });
-
-        // Theme handling
-        function setTheme(theme) {
-            document.documentElement.setAttribute('data-theme', theme);
-            localStorage.setItem('theme', theme);
-        }
-
-        // Initialize theme
         document.addEventListener('DOMContentLoaded', () => {
             const savedTheme = localStorage.getItem('theme') || 'light';
             setTheme(savedTheme);
         });
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        }
     </script>
 </head>
 
@@ -81,7 +68,7 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
                     <h3>Rowery szosowe</h3>
                 </a>
                 <a href="accessories.html" class="category-card">
-                    <img src="https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=800&auto=format&fit=crop&q=60" alt="Akcesoria">
+                    <img src="https://cdn.27.ua/sc--media--prod/default/52/25/35/522535c8-f7b0-4fe8-ba85-9657a732d1c1.jpg" alt="Akcesoria">
                     <h3>Akcesoria</h3>
                 </a>
             </div>
@@ -141,9 +128,7 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
 
     <div id="footer-placeholder"></div>
 
-    <script src="https://api-maps.yandex.ru/2.1/?lang=pl_PL" type="text/javascript"></script>
     <script>
-        // Логика слайдера
         let current = 0;
         const slides = document.querySelectorAll('.slide');
         setInterval(() => {
@@ -152,19 +137,15 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
             slides[current].classList.add('active');
         }, 3000);
 
-        // Логика корзины
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(() => {
-                let cartCount = 0;
                 let cart = JSON.parse(localStorage.getItem('cart')) || [];
                 const cartLink = document.querySelector('.cart a');
                 const addToCartButtons = document.querySelectorAll('.product-card .btn');
 
                 if (cartLink) {
-                    // При загрузке страницы обновляем счетчик
                     cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
 
-                    // Добавление товара в корзину
                     addToCartButtons.forEach(btn => {
                         btn.addEventListener('click', function(e) {
                             e.preventDefault();
@@ -183,7 +164,6 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
                             localStorage.setItem('cart', JSON.stringify(cart));
                             cartLink.innerHTML = '<i class="fas fa-shopping-cart"></i> Koszyk (' + cart.length + ')';
 
-                            // Добавляем анимацию добавления в корзину
                             const notification = document.createElement('div');
                             notification.className = 'cart-notification';
                             notification.textContent = 'Dodano do koszyka';
@@ -195,12 +175,11 @@ Zawiera katalog produktów, promocje i główne funkcje sklepu.
                         });
                     });
 
-                    // Открытие корзины
                     cartLink.addEventListener('click', function(e) {
                         window.location.href = 'cart.html';
                     });
                 }
-            }, 100); // Небольшая задержка, чтобы убедиться, что header загружен
+            }, 100);
         });
     </script>
     <script src="components/loader.js"></script>
